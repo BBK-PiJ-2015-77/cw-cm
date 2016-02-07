@@ -10,6 +10,12 @@ public class ContactImpl implements Contact {
 		this.notes = notes;
 	}
 	
+	public  ContactImpl(int ID, String name) {
+		this.ID = ID;
+		this.name = name;
+		this.notes = "";
+	}
+	
 	@Override
 	public int getId() {
 		return ID;
@@ -30,7 +36,7 @@ public class ContactImpl implements Contact {
 	
 	@Override
 	public void addNotes(String note) {
-		notes = notes + "++ " + note;
+		notes = notes + " ++ " + note;
 	}
 	
 }
