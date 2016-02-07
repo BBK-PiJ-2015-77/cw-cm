@@ -35,9 +35,23 @@ public class ContactImplTest {
 	}
 	
 	@Test
+	public void testsgetEmptyNotes() {
+		con1 = new ContactImpl(id, name);
+		String expected = "";
+		assertEquals(expected, con1.getNotes());
+	}
+	
+	@Test
 	public void testsaddNotes() {
 		con1.addNotes("String");
 		assertNotEquals(notes, con1.getNotes());
+	}
+	
+	@Test
+	public void testsaddNotes2() {
+		con1.addNotes(notes);
+		String expected = "Notes... ++ Notes...";
+		assertEquals(expected, con1.getNotes());
 	}
 	
 }
