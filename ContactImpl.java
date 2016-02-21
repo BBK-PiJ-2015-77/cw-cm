@@ -4,13 +4,26 @@ public class ContactImpl implements Contact {
 	private String name;
 	private String notes;
 	
-	public  ContactImpl(int ID, String name, String notes) {
+	 /**
+     * Creates a Contact. Name and Notes can be null. ID should be ensured that it is unique before it is passed into this method.
+     *
+     * @param id    the ID for the contact
+     * @param name  the name of the contact
+     * @param notes the notes about the contact
+     *
+     * @throws...
+     */
+	public ContactImpl(int ID, String name, String notes) {
+		setAge(ID);
 		this.ID = ID;
 		this.name = name;
 		this.notes = notes;
+		//throw exception - if ID isn't unique. Don't think this
+		//can be done here, do it implementation of CM
 	}
 	
-	public  ContactImpl(int ID, String name) {
+	public ContactImpl(int ID, String name) {
+		setAge(ID);
 		this.ID = ID;
 		this.name = name;
 		this.notes = "";
@@ -19,9 +32,6 @@ public class ContactImpl implements Contact {
 	@Override
 	public int getId() {
 		return ID;
-		//needs to be unique
-		//needs to be a non-zero positive integer
-		//use exception handling if an inappropriate iD is entered?
 	}
 	
 	@Override
@@ -38,5 +48,11 @@ public class ContactImpl implements Contact {
 	public void addNotes(String note) {
 		notes = notes + " ++ " + note;
 	}
+	//need to create a list of ID's, to be able to check if they are unique
 	
+	private void setAge(int ID) {
+		if (ID <= 0) {
+			throw new IllegalArgumentException("The ID must be a non-zero positive integer");
+		}
+	}
 }
