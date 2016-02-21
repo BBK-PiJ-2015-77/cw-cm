@@ -24,6 +24,16 @@ public class ContactImplTest {
 		assertEquals(id, con1.getId());
 	}
 	
+	@Test(expected=IllegalArgumentException.class)
+	public void testsbadId() {
+		con1 = new ContactImpl(-3, name);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testszerobadId() {
+		con1 = new ContactImpl(0, name);
+	}
+	
 	@Test
 	public void testsgetName() {
 		assertEquals(name, con1.getName());
