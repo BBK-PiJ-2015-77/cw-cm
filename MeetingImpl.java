@@ -7,7 +7,10 @@ public class MeetingImpl implements Meeting {
 	private Calendar date;
 	private Set<Contact> contacts;
 	
+	
+	//ID needs to be positive non zero
 	public MeetingImpl(int id, Calendar date, Set<Contact> contacts) {
+		ContactImpl.setId(id);
 		this.id = id;
 		this.date = date;
 		this.contacts = contacts;
