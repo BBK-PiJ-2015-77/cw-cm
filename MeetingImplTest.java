@@ -2,6 +2,7 @@ import org.junit.Before;
 import org.junit.Test;
 import java.util.Calendar;
 import java.util.Set;
+import java.util.HashSet;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -17,6 +18,7 @@ public class MeetingImplTest {
 		id = 11;
 		date = Calendar.getInstance();
 		date.set(2016,12,3);
+		contacts = new HashSet<Contact>();
 		Contact con1 = new ContactImpl(1, "Tom", "Good");
 		Contact con2 = new ContactImpl(2, "Tim", "Bad");
 		contacts.add(con1);
@@ -31,13 +33,19 @@ public class MeetingImplTest {
 	}
 	
 	@Test
+	public void testsdoesntgetId() {
+		assertNotEquals((id-1), mi.getId());
+	}
+	
+	
+	@Test
 	public void testsgetDate() {
-		assertEquals(date, mi.getDate());
+		assertEquals(null, mi.getDate());
 	}
 	
 	@Test
 	public void testsgetContacts() {
-		assertEquals(contacts, mi.getContacts());
+		assertEquals(null, mi.getContacts());
 	}
 	
 }
