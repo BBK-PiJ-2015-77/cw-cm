@@ -1,3 +1,22 @@
+/**
+ * Implementation of the Contact interface.
+ * <p/>
+ * This class does not ensure that ID's are unique, and therefore has a dependency on another class to
+ * ensure that IDs provided to this are unique.
+ * <p/>
+ * ContactManagerImpl ensures IDs provided to this are unique.
+ * <p/>
+ * Several assumptions have been made in the creation of this class:
+ * <ul>
+ * <li>Adding notes when notes already exist will, if the current notes and new string is nonempty, append these
+ * with a '++' in the middle with a space either side. Adding empty spaces will be appended in the same way. This has no impact for use
+ * within ContactManager as there is no way of altering notes once a Contact is created.</li>
+ * <li>Nulls are allowed to be entered for name and notes. It has not been specified to throw any exceptions. The
+ * class ContactManager deals with nulls and empty strings.</li>
+ * <li>Empty names and notes can be stored.</li>
+ * </ul>
+ */
+
 public class ContactImpl implements Contact {
 	
 	private int ID;
