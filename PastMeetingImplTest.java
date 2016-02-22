@@ -24,19 +24,19 @@ public class PastMeetingImplTest {
 		Contact con2 = new ContactImpl(2, "Tim", "Bad");
 		contacts.add(con1);
 		contacts.add(con2);
-		notes = "Metting notes.";
+		notes = "Meeting notes.";
 		
 		pm = new PastMeetingImpl(id, date, contacts, notes);
 	}
 	
 	@Test
 	public void testsgetNotes() {
-		assertEquals(null, pm.getId());
+		assertEquals(notes, pm.getNotes());
 	}
 	
 	@Test
 	public void testsdoesntGetNotes() {
-		assertNotEquals(null, pm.getId());
+		assertNotEquals("Random", pm.getNotes());
 	}
 	
 	@Test
