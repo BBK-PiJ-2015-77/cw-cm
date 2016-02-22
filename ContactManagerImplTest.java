@@ -53,8 +53,13 @@ public class ContactManagerImplTest {
 	
 	@Test(expected=NullPointerException.class)
 	public void testsnullDateAFM() {
-		//IllegalArgumentException if date is in future
       	date = null;
+		cm.addFutureMeeting(contacts, date);
+	}
+	
+	@Test(expected=NullPointerException.class)
+	public void testsnullContactsAFM() {
+      	contacts = null;
 		cm.addFutureMeeting(contacts, date);
 	}
 	
