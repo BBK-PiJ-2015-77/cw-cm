@@ -60,6 +60,13 @@ public class MeetingImplTest {
 		mi = new MeetingImplMock(id, date, contacts);
 	}
 	
+	@Test(expected=IllegalArgumentException.class)
+	public void testsemptyContacts() {
+		//contacts = null;
+		contacts.clear();
+		mi = new MeetingImplMock(id, date, contacts);
+	}
+	
 	@Test
 	public void testsgetDate() {
 		assertEquals(date, mi.getDate());
