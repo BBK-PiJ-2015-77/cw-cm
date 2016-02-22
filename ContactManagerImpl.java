@@ -5,10 +5,13 @@ import java.util.HashSet;
 
 public class ContactManagerImpl implements ContactManager {
 	
-	Set<Contact> contactIdList;
-	Set <Meeting> meetingIdList;
+	private int meetingCount = 1;
+	private Set<Contact> contactIdList;
+	private Set <Meeting> meetingIdList;
 	//pastMeetingIdList?
 	//futureMeetingIdList?
+	private Calendar currentDate = Calendar.getInstance();
+	FutureMeetingImpl fm;
 	
 	public ContactManagerImpl() {
 		contactIdList = new HashSet<Contact>();
@@ -16,7 +19,11 @@ public class ContactManagerImpl implements ContactManager {
 	}
 	
 	public int addFutureMeeting(Set<Contact> contacts, Calendar date) {
-		return 0;
+		checkIfDateInPast(date);
+		fm = new FutureMeetingImpl(meetingCount, date, contacts);
+		meetingIdList.add(fm);
+		meetingCount++;
+		return (meetingCount-1);
 	}
 	
 	public PastMeeting getPastMeeting(int id) {
@@ -66,5 +73,11 @@ public class ContactManagerImpl implements ContactManager {
     public void flush() {
     	//do nothing
     }
+    
+    public void checkIfDateInPast(Calendar date) {
+		if (date.before(currentDate)) {
+			throw new IllegalArgumentException("The date can not be set in the past");
+		}
+	}
 	
 }
