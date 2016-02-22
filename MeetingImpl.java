@@ -16,6 +16,8 @@ public abstract class MeetingImpl implements Meeting {
      */
 	public MeetingImpl(int id, Calendar date, Set<Contact> contacts) {
 		ContactImpl.setId(id);
+		ContactImpl.setNonNullObject(date);
+		ContactImpl.setNonNullObject(contacts);
 		this.id = id;
 		this.date = date;
 		this.contacts = contacts;
