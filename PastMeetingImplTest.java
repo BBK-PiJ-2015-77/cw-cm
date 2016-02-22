@@ -39,6 +39,12 @@ public class PastMeetingImplTest {
 		assertNotEquals("Random", pm.getNotes());
 	}
 	
+	@Test(expected=NullPointerException.class)
+	public void testsnullNotes() {
+		notes = null;
+		pm = new PastMeetingImpl(id, date, contacts, notes);
+	}
+	
 	@Test
 	public void testsgetId() {
 		assertEquals(id, pm.getId());
