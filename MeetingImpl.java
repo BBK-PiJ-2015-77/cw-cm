@@ -15,6 +15,7 @@ public abstract class MeetingImpl implements Meeting {
      * @param contacts  the contacts attending the meeting
      */
 	public MeetingImpl(int id, Calendar date, Set<Contact> contacts) {
+		setNonEmptySet(contacts);
 		ContactImpl.setId(id);
 		ContactImpl.setNonNullObject(date);
 		ContactImpl.setNonNullObject(contacts);
@@ -48,6 +49,12 @@ public abstract class MeetingImpl implements Meeting {
 	@Override
 	public Set<Contact> getContacts() {
 		return contacts;
+	}
+	
+	public static void setNonEmptySet(Set<Contact> contacts) {
+		if (contacts.isEmpty()) {
+			throw new IllegalArgumentException("An empty list can not be entered as an argument");
+		}
 	}
 	
 }
