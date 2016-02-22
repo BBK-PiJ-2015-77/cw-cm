@@ -24,7 +24,8 @@ public class MeetingImplTest {
 		contacts.add(con1);
 		contacts.add(con2);
 		
-		mi = new MeetingImpl(id, date, contacts);
+		mi = new MeetingImplMock(id, date, contacts);
+		//doesnt work now that MeetingImpl is an abstract class
 	}
 	
 	@Test
@@ -37,15 +38,36 @@ public class MeetingImplTest {
 		assertNotEquals((id-1), mi.getId());
 	}
 	
+	@Test(expected=IllegalArgumentException.class)
+	public void testsbadId() {
+		mi = new MeetingImplMock(-3, date, contacts);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testszeroId() {
+		mi = new MeetingImplMock(0, date, contacts);
+	}
+	
+	@Test(expected=NullPointerException.class)
+	public void testsnullDate() {
+		date = null;
+		mi = new MeetingImplMock(id, date, contacts);
+	}
+	
+	@Test(expected=NullPointerException.class)
+	public void testsnullContacts() {
+		contacts = null;
+		mi = new MeetingImplMock(id, date, contacts);
+	}
 	
 	@Test
 	public void testsgetDate() {
-		assertEquals(null, mi.getDate());
+		assertEquals(date, mi.getDate());
 	}
 	
 	@Test
 	public void testsgetContacts() {
-		assertEquals(null, mi.getContacts());
+		assertEquals(contacts, mi.getContacts());
 	}
 	
 }
