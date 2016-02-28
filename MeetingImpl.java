@@ -13,12 +13,16 @@ public abstract class MeetingImpl implements Meeting {
      * @param id        the ID of the meeting
      * @param date      the date of the meeting
      * @param contacts  the contacts attending the meeting
+     * @throws IllegalArgumentException if contacts is empty
+     * @throws IllegalArgumentException if ID isn't a non-zero positive integer
+     * @throws NullPointerException if date is null
+     * @throws NullPointerException if contacts is null
      */
 	public MeetingImpl(int id, Calendar date, Set<Contact> contacts) {
-		setNonEmptySet(contacts);
-		ContactImpl.setId(id);
-		ContactImpl.setNonNullObject(date);
-		ContactImpl.setNonNullObject(contacts);
+		CMExceptions.setNonEmptySet(contacts);
+		CMExceptions.setId(id);
+		CMExceptions.setNonNullObject(date);
+		CMExceptions.setNonNullObject(contacts);
 		this.id = id;
 		this.date = date;
 		this.contacts = contacts;
@@ -50,11 +54,5 @@ public abstract class MeetingImpl implements Meeting {
 	public Set<Contact> getContacts() {
 		return contacts;
 	}
-	
-	public static void setNonEmptySet(Set<Contact> contacts) {
-		if (contacts.isEmpty()) {
-			throw new IllegalArgumentException("An empty list can not be entered as an argument");
-		}
-	}
-	
+
 }
