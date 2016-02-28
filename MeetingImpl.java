@@ -13,16 +13,16 @@ public abstract class MeetingImpl implements Meeting {
      * @param id        the ID of the meeting
      * @param date      the date of the meeting
      * @param contacts  the contacts attending the meeting
-     * @throws IllegalArgumentException if contacts is empty
      * @throws IllegalArgumentException if ID isn't a non-zero positive integer
      * @throws NullPointerException if date is null
      * @throws NullPointerException if contacts is null
+     * @throws IllegalArgumentException if contacts is empty
      */
 	public MeetingImpl(int id, Calendar date, Set<Contact> contacts) {
-		CMExceptions.setNonEmptySet(contacts);
 		CMExceptions.setId(id);
 		CMExceptions.setNonNullObject(date);
 		CMExceptions.setNonNullObject(contacts);
+		CMExceptions.setNonEmptySet(contacts);
 		this.id = id;
 		this.date = date;
 		this.contacts = contacts;
