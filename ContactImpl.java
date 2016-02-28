@@ -21,7 +21,6 @@ public class ContactImpl implements Contact {
 	
 	private int ID;
 	private String name;
-	//private String notes;
 	StringBuilder sb = new StringBuilder();
 	
 	 /**
@@ -30,15 +29,17 @@ public class ContactImpl implements Contact {
      * @param id    the ID for the contact
      * @param name  the name of the contact
      * @param notes the notes about the contact
+     * @throws IllegalArgumentException if ID isn't a non-zero positive integer.
+     * @throws NullPointerException if name is null
+     * @throws NullPointerException if notes is null
      */
 	public ContactImpl(int ID, String name, String notes) {
-		setId(ID);
-		setNonNullObject(name);
-		setNonNullObject(notes);
+		CMExceptions.setId(ID);
+		CMExceptions.setNonNullObject(name);
+		CMExceptions.setNonNullObject(notes);
 		this.ID = ID;
 		this.name = name;
 		sb.append(notes);
-		//this.notes = notes;
 		//throw exception - if ID isn't unique. Don't think this
 		//can be done here, do it implementation of CM
 	}
@@ -48,10 +49,12 @@ public class ContactImpl implements Contact {
      *
      * @param id    the ID for the contact
      * @param name  the name of the contact
+     * @throws IllegalArgumentException if ID isn't a non-zero positive integer.
+     * @throws NullPointerException if name is null
      */
 	public ContactImpl(int ID, String name) {
-		setId(ID);
-		setNonNullObject(name);
+		CMExceptions.setId(ID);
+		CMExceptions.setNonNullObject(name);
 		this.ID = ID;
 		this.name = name;
 	}
@@ -94,32 +97,4 @@ public class ContactImpl implements Contact {
 		sb.append(note);
 	}
 	
-	/**
-     * Throws an exception for the ID entered at the constructor if the ID isn't a non-zero positive integer
-     * Is static so that it can be used easily in other classes.
-     *
-     * @param id    the ID for the contact or any other purpose
-     *
-     * @throws IllegalArgumentException if the ID isn't a non-zero positive integer
-     */
-	public static void setId(int ID) {
-		if (ID <= 0) {
-			throw new IllegalArgumentException("The ID must be a non-zero positive integer");
-		}
-	}
-	
-	
-	/**
-     * Throws an exception for the object entered at the constructor if the object is null
-     * Is static so that it can be used easily in other classes.
-     *
-     * @param obj    the object being checked for NullPointerException
-     *
-     * @throws NullPointerException if the ID isn't a non-zero positive integer
-     */
-	public static void setNonNullObject(Object obj) {
-		if (obj == null) {
-			throw new NullPointerException("A null string can not be entered as an argument");
-		}
-	}
 }
