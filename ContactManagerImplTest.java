@@ -93,6 +93,17 @@ public class ContactManagerImplTest {
 		cm.addNewPastMeeting(contacts, pastDate, text);
 	}
 	
+	@Test(expected=IllegalArgumentException.class)
+	public void testsaddPastMeetingDateNonContact() {
+		//IllegalArgumentException if any of the contacts don't exist
+		Set<Contact> badContacts = new HashSet<Contact>();
+		Contact con1 = new ContactImpl(1, "Jane", "notes1");
+		Contact con2 = new ContactImpl(2, "June", "notes2");
+		badContacts.add(con1);
+		badContacts.add(con2);
+		cm.addNewPastMeeting(badContacts, pastDate, text);
+	}
+	
 	@Test(expected=NullPointerException.class)
 	public void testsaddPastMeetingDateNullcontacts() {
 		//NullPointerException if date is null
