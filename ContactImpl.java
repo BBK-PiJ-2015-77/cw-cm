@@ -21,7 +21,7 @@ public class ContactImpl implements Contact {
 	
 	private int ID;
 	private String name;
-	private String notes;
+	//private String notes;
 	StringBuilder sb = new StringBuilder();
 	
 	 /**
