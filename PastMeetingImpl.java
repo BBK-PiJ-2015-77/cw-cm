@@ -23,10 +23,15 @@ public class PastMeetingImpl extends MeetingImpl implements PastMeeting {
      * @param date      the date the meeting took place
      * @param contacts  the attendees of the meeting
      * @param notes     the notes of the meeting
+     * @throws IllegalArgumentException if ID isn't a non-zero positive integer
+     * @throws NullPointerException if date is null
+     * @throws NullPointerException if contacts is null
+     * @throws IllegalArgumentException if contacts is empty
+     * @throws NullPointerException if notes is null
      */
 	public PastMeetingImpl(int id, Calendar date, Set<Contact> contacts, String notes) {
 		super(id, date, contacts);
-		ContactImpl.setNonNullObject(notes);
+		CMExceptions.setNonNullObject(notes);
 		sb.append(notes);
 	}
 	
