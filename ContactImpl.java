@@ -22,6 +22,7 @@ public class ContactImpl implements Contact {
 	private int ID;
 	private String name;
 	private String notes;
+	StringBuilder sb = new StringBuilder();
 	
 	 /**
      * Creates a Contact. Name and Notes can be null. ID should be ensured that it is unique before it is passed into this method.
@@ -31,10 +32,13 @@ public class ContactImpl implements Contact {
      * @param notes the notes about the contact
      */
 	public ContactImpl(int ID, String name, String notes) {
-		setAge(ID);
+		setId(ID);
+		setNonNullObject(name);
+		setNonNullObject(notes);
 		this.ID = ID;
 		this.name = name;
-		this.notes = notes;
+		sb.append(notes);
+		//this.notes = notes;
 		//throw exception - if ID isn't unique. Don't think this
 		//can be done here, do it implementation of CM
 	}
@@ -46,10 +50,10 @@ public class ContactImpl implements Contact {
      * @param name  the name of the contact
      */
 	public ContactImpl(int ID, String name) {
-		setAge(ID);
+		setId(ID);
+		setNonNullObject(name);
 		this.ID = ID;
 		this.name = name;
-		this.notes = "";
 	}
 	
 	
@@ -76,7 +80,8 @@ public class ContactImpl implements Contact {
 	 */
 	@Override
 	public String getNotes() {
-		return notes;
+		String gNotes = sb.toString();
+		return gNotes;
 	}
 	
 	
@@ -85,19 +90,36 @@ public class ContactImpl implements Contact {
 	 */
 	@Override
 	public void addNotes(String note) {
-		notes = notes + " ++ " + note;
+		sb.append(" ++ ");
+		sb.append(note);
 	}
 	
 	/**
      * Throws an exception for the ID entered at the constructor if the ID isn't a non-zero positive integer
+     * Is static so that it can be used easily in other classes.
      *
-     * @param id    the ID for the contact
+     * @param id    the ID for the contact or any other purpose
      *
      * @throws IllegalArgumentException if the ID isn't a non-zero positive integer
      */
-	private void setAge(int ID) {
+	public static void setId(int ID) {
 		if (ID <= 0) {
 			throw new IllegalArgumentException("The ID must be a non-zero positive integer");
+		}
+	}
+	
+	
+	/**
+     * Throws an exception for the object entered at the constructor if the object is null
+     * Is static so that it can be used easily in other classes.
+     *
+     * @param obj    the object being checked for NullPointerException
+     *
+     * @throws NullPointerException if the ID isn't a non-zero positive integer
+     */
+	public static void setNonNullObject(Object obj) {
+		if (obj == null) {
+			throw new NullPointerException("A null string can not be entered as an argument");
 		}
 	}
 }
