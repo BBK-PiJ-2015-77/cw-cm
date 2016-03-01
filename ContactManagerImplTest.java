@@ -128,8 +128,14 @@ public class ContactManagerImplTest {
 	
 	/////////addMeetingNotes////////////
 
-
     /////////addNewContact////////////
+	
+	@Test
+	public void testsaddNewContacts() {
+		cm.addNewContact("Tom", "Good");
+		int result = cm.addNewContact("Tim", "Bad");
+		assertEquals(2, result);
+	}
 
     /////////getContacts////////////
 
