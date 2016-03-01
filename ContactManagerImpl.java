@@ -66,7 +66,15 @@ public class ContactManagerImpl implements ContactManager {
     }
 
     public int addNewContact(String name, String notes) {
-    	return 0;
+    	int id = contactIdList.size();
+    	id = id + 1;
+    	Contact newContact = new ContactImpl(id, name, notes);
+    	contactIdList.add(newContact);
+    	return id;
+    	//create unique id
+    	//create a new contact
+    	//add it to list
+    	//return id
     }
 
     public Set<Contact> getContacts(int... ids) {
