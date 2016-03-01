@@ -10,8 +10,9 @@ public class ContactManagerImpl implements ContactManager {
 	private Set <Meeting> meetingIdList;
 	//pastMeetingIdList?
 	//futureMeetingIdList?
-	private Calendar currentDate = Calendar.getInstance();
+	//private Calendar currentDate = Calendar.getInstance();
 	FutureMeetingImpl fm;
+	PastMeetingImpl pm;
 	
 	public ContactManagerImpl() {
 		contactIdList = new HashSet<Contact>();
@@ -19,7 +20,7 @@ public class ContactManagerImpl implements ContactManager {
 	}
 	
 	public int addFutureMeeting(Set<Contact> contacts, Calendar date) {
-		checkIfDateInPast(date);
+		CMExceptions.checkIfDateInPast(date);
 		fm = new FutureMeetingImpl(meetingCount, date, contacts);
 		meetingIdList.add(fm);
 		meetingCount++;
@@ -51,19 +52,25 @@ public class ContactManagerImpl implements ContactManager {
 	}
 	
 	public void addNewPastMeeting(Set<Contact> contacts, Calendar date, String text) {
-		//do nothing
+		//IllegalArgumentException if contacts empty
+		//NullPointerException if any arguments are null
+		CMExceptions.checkContacts(contacts, contactIdList);
+		pm = new PastMeetingImpl(meetingCount, date, contacts, text);
+		meetingIdList.add(pm);
+		meetingCount++;
+		//needs to throw an exception if a contact isn't in the contact list
 	}
 
-    public void addMeetingNotes(int id, String text) {
-    	//do nothing
+    public PastMeeting addMeetingNotes(int id, String text) {
+    	return null;
     }
 
-    public void addNewContact(String name, String notes) {
-    	//do nothing
+    public int addNewContact(String name, String notes) {
+    	return 0;
     }
 
     public Set<Contact> getContacts(int... ids) {
-    		return null;
+    	return null;
     }
 
     public Set<Contact> getContacts(String name) {
@@ -73,11 +80,5 @@ public class ContactManagerImpl implements ContactManager {
     public void flush() {
     	//do nothing
     }
-    
-    public void checkIfDateInPast(Calendar date) {
-		if (date.before(currentDate)) {
-			throw new IllegalArgumentException("The date can not be set in the past");
-		}
-	}
 	
 }
