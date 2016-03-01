@@ -1,4 +1,5 @@
 import java.util.Set;
+import java.util.Calendar;
 import java.util.Iterator;
 
 /**
@@ -49,6 +50,13 @@ public class CMExceptions {
 		}
 	}
 	
+	public static void checkIfDateInPast(Calendar date) {
+		Calendar currentDate = Calendar.getInstance();
+		if (date.before(currentDate)) {
+			throw new IllegalArgumentException("The date can not be set in the past");
+		}
+	}
+	
 	/**
      * Checks if all the elements of set1 are contained in set 2.
      * If not, an IllegalArgumentException is thrown.
@@ -68,5 +76,7 @@ public class CMExceptions {
 			}
 		}
 	}
+	
+	
 	
 }
