@@ -5,7 +5,7 @@ import java.util.HashSet;
 
 public class ContactManagerImpl implements ContactManager {
 	
-	private int meetingCount = 1;
+	//private int meetingCount = 1;
 	private Set<Contact> contactIdList;
 	private Set <Meeting> meetingIdList;
 	//pastMeetingIdList?
@@ -21,10 +21,11 @@ public class ContactManagerImpl implements ContactManager {
 	
 	public int addFutureMeeting(Set<Contact> contacts, Calendar date) {
 		CMExceptions.checkIfDateInPast(date);
-		fm = new FutureMeetingImpl(meetingCount, date, contacts);
+		int meetingID = getMeetingID();
+		fm = new FutureMeetingImpl(meetingID, date, contacts);
 		meetingIdList.add(fm);
-		meetingCount++;
-		return (meetingCount-1);
+		//meetingCount++;
+		return (meetingID);
 	}
 	
 	public PastMeeting getPastMeeting(int id) {
@@ -55,9 +56,10 @@ public class ContactManagerImpl implements ContactManager {
 		//IllegalArgumentException if contacts empty
 		//NullPointerException if any arguments are null
 		CMExceptions.checkContacts(contacts, contactIdList);
-		pm = new PastMeetingImpl(meetingCount, date, contacts, text);
+		int meetingID = getMeetingID();
+		pm = new PastMeetingImpl(meetingID, date, contacts, text);
 		meetingIdList.add(pm);
-		meetingCount++;
+		//meetingCount++;
 		//needs to throw an exception if a contact isn't in the contact list
 	}
 
@@ -66,8 +68,7 @@ public class ContactManagerImpl implements ContactManager {
     }
 
     public int addNewContact(String name, String notes) {
-    	int id = contactIdList.size();
-    	id = id + 1;
+    	int id = getContactID();
     	Contact newContact = new ContactImpl(id, name, notes);
     	contactIdList.add(newContact);
     	return id;
@@ -87,6 +88,16 @@ public class ContactManagerImpl implements ContactManager {
 
     public void flush() {
     	//do nothing
+    }
+    
+    private int getMeetingID() {
+    	int meetingCount = meetingIdList.size();
+    	return (meetingCount + 1);
+    }
+    
+    private int getContactID() {
+    	int id = contactIdList.size();
+    	return (id + 1);
     }
 	
 }
