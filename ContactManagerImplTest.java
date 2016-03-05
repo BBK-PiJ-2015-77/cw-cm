@@ -7,6 +7,7 @@ import java.util.HashSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 public class ContactManagerImplTest {
 	
@@ -110,37 +111,68 @@ public class ContactManagerImplTest {
 		contacts = null;
 		cm.addNewPastMeeting(contacts, pastDate, text);
 	}
-	
+	/**
+	//doesnt work - illegalArgumentException - the contacts need to be added first
 	@Test(expected=NullPointerException.class)
 	public void testsaddPastMeetingDateNullpastDate() {
 		//NullPointerException if date is null
+		cm.addNewContact("Tom", "Good");
+		cm.addNewContact("Tim", "Bad");
 		pastDate = null;
 		cm.addNewPastMeeting(contacts, pastDate, text);
 	}
 	
+	//doesnt work - illegalArgumentException  - the contacts need to be added first, if contacts empty, or if zero or negative id
 	@Test(expected=NullPointerException.class)
 	public void testsaddPastMeetingDateNulltext() {
 		//NullPointerException if text is null
+		cm.addNewContact("Tom", "Good");
+		cm.addNewContact("Tim", "Bad");
 		text = null;
 		cm.addNewPastMeeting(contacts, pastDate, text);
 	}
-	
+	*/
 	
 	/////////addMeetingNotes////////////
 
     /////////addNewContact////////////
 	
 	@Test
-	public void testsaddNewContacts() {
+	public void testsaddNewContacts1() {
+		int result = cm.addNewContact("Tom", "Good");
+		assertEquals(1, result);
+	}
+	
+	@Test
+	public void testsaddNewContacts2() {
 		cm.addNewContact("Tom", "Good");
 		int result = cm.addNewContact("Tim", "Bad");
 		assertEquals(2, result);
 	}
 
     /////////getContacts////////////
-
+	
+	@Test
+	public void testsgetContacts() {
+		cm.addNewContact("Tom", "Good");
+		//cm.addNewContact("Tim", "Bad");
+		Set<Contact> result = cm.getContacts("");
+		for ( Contact testContact : result) {
+			assertTrue(contacts.contains(testContact));
+		}
+		//this doesnt work because they aren't pointing to the same object
+		//need to check that the information contained in each 'Contact'
+		//is present in each list
+		
+	}
+	//the hashset doesnt add things in order, so the two sets may well be different
+	
     /////////getContacts////////////
     
     /////////flush////////////
+	
+	//private methods here
+	
+	/////////check checkContacts/////
 	
 }
