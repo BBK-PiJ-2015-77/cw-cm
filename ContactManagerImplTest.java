@@ -183,6 +183,26 @@ public class ContactManagerImplTest {
 		assertFalse(result);		
 	}
 	
+	@Test
+	public void testsgetContactsName() {
+		Set<Contact> testList = new HashSet<Contact>();
+		Contact tim = new ContactImpl(2, "Tim", "Bad");
+		testList.add(tim);
+		
+		addTestContacts();
+		Set<Contact> cmContactList = cm.getContacts("Tim");
+		
+		boolean result = true;
+		for ( Contact testContact : cmContactList) {
+			if (containsContact(testList, testContact)) {
+				//do nothing
+			} else {
+				result = false;
+			}
+		}
+		assertTrue(result);
+	}
+	
     /////////getContacts////////////
     
     @Test
