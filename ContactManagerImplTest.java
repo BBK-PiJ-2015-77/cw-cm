@@ -155,19 +155,33 @@ public class ContactManagerImplTest {
 	@Test
 	public void testsgetContacts() {
 		addTestContacts();
-		Set<Contact> result = cm.getContacts("");
-
-		for ( Contact testContact : result) {
-			containsContact(contacts, testContact);
+		Set<Contact> cmContactList = cm.getContacts("");
+		boolean result = true;
+		for ( Contact testContact : cmContactList) {
+			if (containsContact(contacts, testContact)) {
+				//do nothing
+			} else {
+				result = false;
+			}
 		}
-		
-		assertTrue(contacts.contains(testContact));
-		//this doesnt work because they aren't pointing to the same object
-		//need to check that the information contained in each 'Contact'
-		//is present in each list
-		
+		assertTrue(result);		
 	}
-	//the hashset doesnt add things in order, so the two sets may well be different
+	
+	@Test
+	public void testsgetContactsFalse() {
+		Set<Contact> badContacts = addBadTestContacts();
+		addTestContacts();
+		Set<Contact> cmContactList = cm.getContacts("");
+		boolean result = true;
+		for ( Contact testContact : cmContactList) {
+			if (containsContact(badContacts, testContact)) {
+				//do nothing
+			} else {
+				result = false;
+			}
+		}
+		assertFalse(result);		
+	}
 	
     /////////getContacts////////////
     
@@ -185,6 +199,15 @@ public class ContactManagerImplTest {
 		cm.addNewContact("Tim", "Bad");
 	}
 	
+	private Set<Contact> addBadTestContacts() {
+		Set<Contact> badContacts = new HashSet<Contact>();
+		Contact con1 = new ContactImpl(1, "Jane", "notes1");
+		Contact con2 = new ContactImpl(2, "June", "notes2");
+		badContacts.add(con1);
+		badContacts.add(con2);
+		return badContacts;
+	}
+	
 	private boolean equalsContact(Contact con1, Contact con2) {
 		boolean result = false;
 		if (con1.getId() == con2.getId() &&
@@ -199,11 +222,15 @@ public class ContactManagerImplTest {
 	
 	private boolean containsContact(Set<Contact> list, Contact con) {
 		boolean result = false;
-		for ( Contact check : list) {
-			if (equalsContact(check, con)) {
-				result = true;
-				return result;
-			} 
+		if (list.isEmpty()) {
+			return result;
+		} else {
+			for ( Contact check : list) {
+				if (equalsContact(check, con)) {
+					result = true;
+					return result;
+				} 
+			}
 		}
 		return result;
 	}
