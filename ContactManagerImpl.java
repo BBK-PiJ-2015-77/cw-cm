@@ -83,12 +83,32 @@ public class ContactManagerImpl implements ContactManager {
     }
 
     public Set<Contact> getContacts(String name) {
-    	return null;
+    	Set<Contact> newContactList = new HashSet<Contact>();
+    	
+    	if (name == null) {
+    		throw new NullPointerException("A null string can not be entered as an argument");
+    	} else if (name == "") {
+    		return contactIdList;
+    	} else {
+    		for ( Contact con : contactIdList) {
+    			if (con.getName().equals(name)) {
+    				newContactList.add(con);
+    			}
+    		}
+    		return newContactList;
+    	}
+    	//check if that each element exists in the current contact list
+    	//if it is, add it to a new list
+    	//return the list
+    	
+    	
     }
-
+    
     public void flush() {
     	//do nothing
     }
+    
+    
     
     private int getMeetingID() {
     	int meetingCount = meetingIdList.size();
