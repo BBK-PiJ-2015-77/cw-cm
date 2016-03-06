@@ -214,7 +214,42 @@ public class ContactManagerImplTest {
     
     @Test
 	public void testsgetContactsID() {
+		Set<Contact> testList = new HashSet<Contact>();
+		Contact tim = new ContactImpl(2, "Tim", "Bad");
+		testList.add(tim);
 		
+		addTestContacts();
+		Set<Contact> cmContactList = cm.getContacts(2);
+		
+		boolean result = true;
+		for ( Contact testContact : cmContactList) {
+			if (containsContact(testList, testContact)) {
+				//do nothing
+			} else {
+				result = false;
+			}
+		}
+		assertTrue(result);
+	}
+	
+	@Test
+	public void testsgetContactsID2() {
+		Set<Contact> testList = new HashSet<Contact>();
+		Contact tom = new ContactImpl(1, "Tom", "Good");
+		testList.add(tom);
+		
+		addTestContacts();
+		Set<Contact> cmContactList = cm.getContacts(1);
+		
+		boolean result = true;
+		for ( Contact testContact : cmContactList) {
+			if (containsContact(testList, testContact)) {
+				//do nothing
+			} else {
+				result = false;
+			}
+		}
+		assertTrue(result);
 	}
     
     /////////flush////////////
