@@ -154,12 +154,14 @@ public class ContactManagerImplTest {
 	
 	@Test
 	public void testsgetContacts() {
-		cm.addNewContact("Tom", "Good");
-		//cm.addNewContact("Tim", "Bad");
+		addTestContacts();
 		Set<Contact> result = cm.getContacts("");
+
 		for ( Contact testContact : result) {
-			assertTrue(contacts.contains(testContact));
+			containsContact(contacts, testContact);
 		}
+		
+		assertTrue(contacts.contains(testContact));
 		//this doesnt work because they aren't pointing to the same object
 		//need to check that the information contained in each 'Contact'
 		//is present in each list
@@ -169,9 +171,42 @@ public class ContactManagerImplTest {
 	
     /////////getContacts////////////
     
+    @Test
+	public void testsgetContactsID() {
+		
+	}
+    
     /////////flush////////////
 	
 	//private methods here
+	
+	private void addTestContacts() {
+		cm.addNewContact("Tom", "Good");
+		cm.addNewContact("Tim", "Bad");
+	}
+	
+	private boolean equalsContact(Contact con1, Contact con2) {
+		boolean result = false;
+		if (con1.getId() == con2.getId() &&
+			con1.getName().equals(con2.getName()) && 
+			con1.getNotes().equals(con2.getNotes())) {
+				result = true;
+				return result;
+		} else {
+			return result;
+		}
+	}
+	
+	private boolean containsContact(Set<Contact> list, Contact con) {
+		boolean result = false;
+		for ( Contact check : list) {
+			if (equalsContact(check, con)) {
+				result = true;
+				return result;
+			} 
+		}
+		return result;
+	}
 	
 	/////////check checkContacts/////
 	
