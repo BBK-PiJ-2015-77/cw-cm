@@ -203,6 +203,13 @@ public class ContactManagerImplTest {
 		assertTrue(result);
 	}
 	
+	@Test(expected=NullPointerException.class)
+	public void testsgetContactsNull() {
+		//NullPointerException if String name is null
+		String nullName = null;
+		cm.getContacts(nullName);
+	}
+	
     /////////getContacts////////////
     
     @Test
