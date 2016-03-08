@@ -251,6 +251,40 @@ public class ContactManagerImplTest {
 		}
 		assertTrue(result);
 	}
+	
+	@Test
+	public void testsgetContactsID3() {
+		Set<Contact> testList = new HashSet<Contact>();
+		Contact tom = new ContactImpl(1, "Tom", "Good");
+		testList.add(tom);
+		Contact tim = new ContactImpl(2, "Tim", "Bad");
+		testList.add(tim);
+		
+		addTestContacts();
+		Set<Contact> cmContactList = cm.getContacts(1, 2);
+		
+		boolean result = true;
+		for ( Contact testContact : cmContactList) {
+			if (containsContact(testList, testContact)) {
+				//do nothing
+			} else {
+				result = false;
+			}
+		}
+		assertTrue(result);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testsgetContactsNoID() {
+		addTestContacts();
+		Set<Contact> cmContactList = cm.getContacts();
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testsgetContactsContactNonexistent() {
+		addTestContacts();
+		Set<Contact> cmContactList = cm.getContacts(5032);
+	}
     
     /////////flush////////////
 	
