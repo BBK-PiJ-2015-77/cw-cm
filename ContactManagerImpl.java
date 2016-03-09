@@ -79,15 +79,30 @@ public class ContactManagerImpl implements ContactManager {
     }
 
     public Set<Contact> getContacts(int... ids) {
-    	return null;
+    	
+    	if (ids.length == 0) {
+    		throw new IllegalArgumentException("An ID must be entered as an argument");
+    	} else {
+    		Set<Contact> newContactList = new HashSet<Contact>();
+    		for (int i : ids) {
+    			if (!checkContact(i)) {
+    				throw new IllegalArgumentException("A valid ID must be entered as an argument");
+    			} else {
+    				for ( Contact con : contactIdList) {
+    					if (con.getId() == i) {
+    						newContactList.add(con);
+    					}
+    				}
+    			}
+    		}
+    		return newContactList;
+    	}
     }
 
     public Set<Contact> getContacts(String name) {
     	Set<Contact> newContactList = new HashSet<Contact>();
-    	
-    	if (name == null) {
-    		throw new NullPointerException("A null string can not be entered as an argument");
-    	} else if (name == "") {
+    	CMExceptions.setNonNullObject(name);
+    	if (name == "") {
     		return contactIdList;
     	} else {
     		for ( Contact con : contactIdList) {
@@ -118,6 +133,16 @@ public class ContactManagerImpl implements ContactManager {
     private int getContactID() {
     	int id = contactIdList.size();
     	return (id + 1);
+    }
+    
+    private boolean checkContact(int i) {
+    	boolean result = false;
+    	for ( Contact con : contactIdList) {
+    		if(i == con.getId()) {
+    			result = true;
+    		}
+    	}
+    	return result;
     }
 	
 }
