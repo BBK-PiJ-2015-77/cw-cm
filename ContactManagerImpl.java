@@ -53,14 +53,19 @@ public class ContactManagerImpl implements ContactManager {
 	}
 	
 	public void addNewPastMeeting(Set<Contact> contacts, Calendar date, String text) {
-		//IllegalArgumentException if contacts empty
-		//NullPointerException if any arguments are null
-		CMExceptions.checkContacts(contacts, contactIdList);
+		//Already throws IllegalArgumentException if contacts is empty
+		//using PastMeetingImpl
+		
+		//Throw IllegalArgumentException if any contacts don't exist
+		for (Contact con : contacts) {
+			if (!containsContact(contactIdList,con)) {
+				throw new IllegalArgumentException("An invalid contact has been entered");
+			}
+		}
+
 		int meetingID = getMeetingID();
 		pm = new PastMeetingImpl(meetingID, date, contacts, text);
 		meetingIdList.add(pm);
-		//meetingCount++;
-		//needs to throw an exception if a contact isn't in the contact list
 	}
 
     public PastMeeting addMeetingNotes(int id, String text) {
@@ -144,5 +149,32 @@ public class ContactManagerImpl implements ContactManager {
     	}
     	return result;
     }
+    
+    private boolean equalsContact(Contact con1, Contact con2) {
+		boolean result = false;
+		if (con1.getId() == con2.getId() &&
+			con1.getName().equals(con2.getName()) && 
+			con1.getNotes().equals(con2.getNotes())) {
+				result = true;
+				return result;
+		} else {
+			return result;
+		}
+	}
+	
+	private boolean containsContact(Set<Contact> list, Contact con) {
+		boolean result = false;
+		if (list.isEmpty()) {
+			return result;
+		} else {
+			for ( Contact check : list) {
+				if (equalsContact(check, con)) {
+					result = true;
+					return result;
+				} 
+			}
+		}
+		return result;
+	}
 	
 }
