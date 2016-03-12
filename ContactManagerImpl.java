@@ -21,6 +21,13 @@ public class ContactManagerImpl implements ContactManager {
 	
 	public int addFutureMeeting(Set<Contact> contacts, Calendar date) {
 		CMExceptions.checkIfDateInPast(date);
+		
+		for (Contact con : contacts) {
+			if (!containsContact(contactIdList,con)) {
+				throw new IllegalArgumentException("An invalid contact has been entered");
+			}
+		}
+		
 		int meetingID = getMeetingID();
 		fm = new FutureMeetingImpl(meetingID, date, contacts);
 		meetingIdList.add(fm);
