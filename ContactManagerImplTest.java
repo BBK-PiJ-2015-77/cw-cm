@@ -53,13 +53,16 @@ public class ContactManagerImplTest {
 		cm.addFutureMeeting(contacts, pastDate);
 	}
 	
-	/**
-	//test if the contact exists(check id?)
 	@Test(expected=IllegalArgumentException.class)
-	public void testsfutureMeetingDateAFM() {
-		//IllegalArgumentException if contact is unknown
+	public void testsfutureMeetingDateBadContacts() {
+		//IllegalArgumentException if contact is unknown of doesn't exist
+		Set<Contact> badContacts = new HashSet<Contact>();
+		Contact con1 = new ContactImpl(1, "Jane", "notes1");
+		Contact con2 = new ContactImpl(2, "June", "notes2");
+		badContacts.add(con1);
+		badContacts.add(con2);
+		cm.addFutureMeeting(badContacts, futureDate);
 	}
-	*/
 	
 	@Test(expected=NullPointerException.class)
 	public void testsnullDateAFM() {
@@ -74,6 +77,30 @@ public class ContactManagerImplTest {
 	}
 	
 	/////////getPastMeeting////////////
+	
+	@Test
+	public void testsgetPastMeeting() {
+		addTestContacts();
+		cm.addNewPastMeeting(contacts, pastDate, text);
+		PastMeeting pastMeeting = cm.getPastMeeting(1);
+		assertEquals(text, pastMeeting.getNotes());
+		assertEquals(pastDate, pastMeeting.getDate());
+		
+		Set<Contact> pastMeetingContacts = pastMeeting.getContacts();
+		
+		assertTrue(equalsContactList(pastMeetingContacts,contacts));
+		assertEquals(pastMeeting.getDate(),pastDate);
+		assertEquals(pastMeeting.getNotes(),text);
+	}
+	
+	/**
+	@Test(expected=IllegalArgumentException.class)
+	public void testsgetPastMeetingFutureID() {
+		//add future meeting
+		//then test that illegal argument exception occurs
+	}
+	*/
+	
 	
 	/////////getFutureMeeting////////////
 	
@@ -107,34 +134,57 @@ public class ContactManagerImplTest {
 	
 	@Test(expected=NullPointerException.class)
 	public void testsaddPastMeetingDateNullcontacts() {
-		//NullPointerException if date is null
+		//NullPointerException if contacts is null
 		contacts = null;
 		cm.addNewPastMeeting(contacts, pastDate, text);
 	}
-	/**
-	//doesnt work - illegalArgumentException - the contacts need to be added first
+	
 	@Test(expected=NullPointerException.class)
 	public void testsaddPastMeetingDateNullpastDate() {
 		//NullPointerException if date is null
-		cm.addNewContact("Tom", "Good");
-		cm.addNewContact("Tim", "Bad");
+		addTestContacts();
 		pastDate = null;
 		cm.addNewPastMeeting(contacts, pastDate, text);
 	}
 	
-	//doesnt work - illegalArgumentException  - the contacts need to be added first, if contacts empty, or if zero or negative id
 	@Test(expected=NullPointerException.class)
 	public void testsaddPastMeetingDateNulltext() {
 		//NullPointerException if text is null
-		cm.addNewContact("Tom", "Good");
-		cm.addNewContact("Tim", "Bad");
+		addTestContacts();
 		text = null;
 		cm.addNewPastMeeting(contacts, pastDate, text);
 	}
-	*/
+	
 	
 	/////////addMeetingNotes////////////
-
+	/**
+	@Test
+	public void testsaddMeetingNotes() {
+		addTestContacts();
+		text = "";
+		cm.addNewPastMeeting(contacts, pastDate, text);
+		String testNotes = "Testing addMeetingNotes";
+		cm.addMeetingNotes(1, testNotes);
+		Meeting pastMeeting = cm.getPastMeeting(1);
+		assertEquals(testNotes, pastMeeting.getNotes());
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testsaddMeetingNotesNoMeeting() {
+		//IllegalArgumentException if meeting doesn't exist
+		addTestContacts();
+		cm.addMeetingNotes(1, "Testing addMeetingNotes");
+	}
+	
+	*/
+	
+	
+	
+	//IllegalStateException if the meeting date is set for the future
+	
+	//NullPointerException if notes is null
+	
+	
     /////////addNewContact////////////
 	
 	@Test
@@ -158,9 +208,8 @@ public class ContactManagerImplTest {
 		Set<Contact> cmContactList = cm.getContacts("");
 		boolean result = true;
 		for ( Contact testContact : cmContactList) {
-			if (containsContact(contacts, testContact)) {
-				//do nothing
-			} else {
+			if (containsContact(contacts, testContact)) {}
+			else {
 				result = false;
 			}
 		}
@@ -174,9 +223,8 @@ public class ContactManagerImplTest {
 		Set<Contact> cmContactList = cm.getContacts("");
 		boolean result = true;
 		for ( Contact testContact : cmContactList) {
-			if (containsContact(badContacts, testContact)) {
-				//do nothing
-			} else {
+			if (containsContact(badContacts, testContact)) {}
+			else {
 				result = false;
 			}
 		}
@@ -194,9 +242,8 @@ public class ContactManagerImplTest {
 		
 		boolean result = true;
 		for ( Contact testContact : cmContactList) {
-			if (containsContact(testList, testContact)) {
-				//do nothing
-			} else {
+			if (containsContact(testList, testContact)) {}
+			else {
 				result = false;
 			}
 		}
@@ -223,9 +270,8 @@ public class ContactManagerImplTest {
 		
 		boolean result = true;
 		for ( Contact testContact : cmContactList) {
-			if (containsContact(testList, testContact)) {
-				//do nothing
-			} else {
+			if (containsContact(testList, testContact)) {}
+			else {
 				result = false;
 			}
 		}
@@ -243,9 +289,8 @@ public class ContactManagerImplTest {
 		
 		boolean result = true;
 		for ( Contact testContact : cmContactList) {
-			if (containsContact(testList, testContact)) {
-				//do nothing
-			} else {
+			if (containsContact(testList, testContact)) {}
+			else {
 				result = false;
 			}
 		}
@@ -277,7 +322,8 @@ public class ContactManagerImplTest {
 	@Test(expected=IllegalArgumentException.class)
 	public void testsgetContactsNoID() {
 		addTestContacts();
-		Set<Contact> cmContactList = cm.getContacts();
+		int[] ident = new int[0];
+		Set<Contact> cmContactList = cm.getContacts(ident);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
@@ -331,6 +377,28 @@ public class ContactManagerImplTest {
 		return result;
 	}
 	
-	/////////check checkContacts/////
+	private boolean equalsContactList(Set<Contact> list1, Set<Contact> list2) {
+		boolean result = true;
+		if (list1.isEmpty() || list2.isEmpty()) {
+			result = false;
+			return result;
+		} else {
+			//check all contacts in list1 are in list2
+			for ( Contact con : list1) {
+				if (!containsContact(list2, con)) {
+					result = false;
+				}
+			}
+			//and check all contacts in list2 are in list1
+			for ( Contact con : list2) {
+				if (!containsContact(list1, con)) {
+					result = false;
+				}
+			}
+			
+		}
+		return result;
+	}
+	
 	
 }
