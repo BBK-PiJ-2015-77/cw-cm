@@ -42,6 +42,7 @@ public class ContactManagerImplTest {
 	
 	@Test
 	public void testsaddFutureMeeting() {
+		addTestContacts();
 		int aFM = cm.addFutureMeeting(contacts, futureDate);
 		assertTrue(aFM>0);
 		//some test that shows an int is returned
