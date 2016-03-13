@@ -114,9 +114,10 @@ public class ContactManagerImplTest {
 	@Test
 	public void testsgetFutureMeeting() {
 		addTestContacts();
-		cm.addNewPastMeeting(contacts, futureDate, text);
+		cm.addFutureMeeting(contacts, futureDate);
+		//check this line. future meeting returns an int
 		FutureMeeting fm = cm.getFutureMeeting(1);
-		assertEquals(pastDate, fm.getDate());
+		assertEquals(futureDate, fm.getDate());
 		
 		Set<Contact> futureMeetingContacts = fm.getContacts();
 		
