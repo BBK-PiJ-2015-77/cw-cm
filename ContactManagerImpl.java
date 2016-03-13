@@ -1,7 +1,9 @@
 import java.util.Calendar;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Collections;
 
 public class ContactManagerImpl implements ContactManager {
 	
@@ -68,7 +70,36 @@ public class ContactManagerImpl implements ContactManager {
 	}
 	
 	public List<Meeting> getFutureMeetingList(Contact contact) {
-		return null;
+		CMExceptions.setNonNullObject(contact);
+		if (!containsContact(contactIdList, contact)) {
+			throw new IllegalArgumentException("An invalid contact has been entered");
+		}
+		
+		List<Meeting> fml = new ArrayList<Meeting>();
+		
+		//get an unsorted list of future meetings
+		for (Meeting m : meetingIdList) {
+			if (m instanceof FutureMeeting) {
+				fml.add(m);
+			}
+		}
+		
+		//remove duplicates
+		if (checkDuplicateMeetings(fml)) {
+			fml = removeDuplicateMeetings(fml);
+		}
+		
+		//order chronologically
+		Collections.sort(fml, new CompareDates());
+		
+		//check if the contact is contained in any of the meetings,
+		for (Meeting m : fml) {
+			if (!containsContact(m.getContacts(),contact)) {
+				fml.remove(m);
+			}
+		}
+		
+		return fml;
 	}
 	
 	public List<Meeting> getFutureMeetingList(Calendar date) {
@@ -202,6 +233,73 @@ public class ContactManagerImpl implements ContactManager {
 			}
 		}
 		return result;
+	}
+	
+	private boolean equalContactList(Set<Contact> list1, Set<Contact> list2) {
+		boolean result = true;
+		if (list1.isEmpty() || list2.isEmpty()) {
+			result = false;
+			return result;
+		} else {
+			//check all contacts in list1 are in list2
+			for ( Contact con : list1) {
+				if (!containsContact(list2, con)) {
+					result = false;
+				}
+			}
+			//and check all contacts in list2 are in list1
+			for ( Contact con : list2) {
+				if (!containsContact(list1, con)) {
+					result = false;
+				}
+			}
+			
+		}
+		return result;
+	}
+	
+	
+	private boolean checkDuplicateMeetings(List<Meeting> meetings) {
+		boolean result = false;
+		for (int i = 0; i<meetings.size(); i++) {
+			for (int j = (i+1); j<meetings.size(); j++) {
+				if (equalsMeeting(meetings.get(i),meetings.get(j))) {
+					result = true;
+				}
+			}
+		}
+		return result;
+	}
+	
+	private List<Meeting> removeDuplicateMeetings(List<Meeting> meetings) {
+		List<Meeting> uniqueList = meetings;
+		
+		boolean result = false;
+		for (int i = 0; i<meetings.size(); i++) {
+			for (int j = (i+1); j<meetings.size(); j++) {
+				if (equalsMeeting(meetings.get(i),meetings.get(j))) {
+					uniqueList.remove(meetings.get(j));
+				}
+			}
+		}
+		return uniqueList;
+	}
+	
+	
+	private boolean equalsMeeting(Meeting m1, Meeting m2) {
+		boolean result = false;
+		if (m1.getId() == m2.getId() &&
+			m1.getDate().equals(m2.getDate()) && 
+			equalContactList(m1.getContacts(), m2.getContacts())) {
+				result = true;
+				return result;
+		} else if  (m1.getDate().equals(m2.getDate()) && 
+					equalContactList(m1.getContacts(), m2.getContacts())) {
+						result = true;
+						return result;
+		} else {
+			return result;
+		}
 	}
 	
 }
