@@ -178,15 +178,34 @@ public class ContactManagerImplTest {
 	public void testsgetFutureMeetingListBadContact() {
 		addTestMeetings();
 		Contact con3 = new ContactImpl(1, "Jane", "notes1");
-		List<Meeting> fml = cm.getFutureMeetingList(con3);
+		cm.getFutureMeetingList(con3);
 	}
 	
 	@Test(expected=NullPointerException.class)
 	public void testsgetFutureMeetingListNullContact() {
 		addTestMeetings();
 		Contact con3 = null;
-		List<Meeting> fml = cm.getFutureMeetingList(con3);
+		cm.getFutureMeetingList(con3);
 	}
+	
+	@Test
+	public void testsgetFutureMeetingListNoDuplicates() {
+		addTestMeetings();
+		cm.addFutureMeeting(contacts, futureDate);
+		//5 meetings have been added, 2 are duplicates
+		List<Meeting> fml = cm.getFutureMeetingList(con1);
+		assertTrue(fml.size() == 2);
+		assertTrue(fml.get(0).getId() == 1 && fml.get(1).getId() == 3);
+	}
+	
+	@Test
+	public void testsgetFutureMeetingListNoMeeting() {
+		Contact con3 = new ContactImpl(3, "Jane", "fml no meeting");
+		cm.addNewContact("Jane", "fml no meeting");
+		List<Meeting> fml = cm.getFutureMeetingList(con3);
+		assertTrue(fml.isEmpty());
+	}
+	
 	
 	/////////getFutureMeetingList////////////
 	
