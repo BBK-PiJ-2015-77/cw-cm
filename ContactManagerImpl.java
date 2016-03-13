@@ -36,6 +36,7 @@ public class ContactManagerImpl implements ContactManager {
 	}
 	
 	public PastMeeting getPastMeeting(int id) {
+		/**
 		Calendar currentDate = Calendar.getInstance();
 		Meeting m = null;
 		
@@ -51,6 +52,11 @@ public class ContactManagerImpl implements ContactManager {
 
 		CMExceptions.checkIfDateInFuture(m.getDate());
 		return (PastMeeting) m;
+		*/
+		Calendar currentDate = Calendar.getInstance();
+		Meeting m = getMeeting(id);
+		CMExceptions.checkIfDateInFuture(m.getDate());
+		return (PastMeeting) m;
 	}
 	
 	public FutureMeeting getFutureMeeting(int id) {
@@ -58,7 +64,17 @@ public class ContactManagerImpl implements ContactManager {
 	}
 	
 	public Meeting getMeeting(int id) {
-		return null;
+		Meeting m = null;
+		if (id > (meetingIdList.size() + 1) || id <= 0) {
+			return m;
+		}
+		
+		for (Meeting meet : meetingIdList) {
+			if (meet.getId() == id) {
+				m = meet;
+			}
+		}
+		return m;
 	}
 	
 	public List<Meeting> getFutureMeetingList(Contact contact) {
