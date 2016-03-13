@@ -36,7 +36,21 @@ public class ContactManagerImpl implements ContactManager {
 	}
 	
 	public PastMeeting getPastMeeting(int id) {
-		return null;
+		Calendar currentDate = Calendar.getInstance();
+		Meeting m = null;
+		
+		if (id > (meetingIdList.size() + 1) || id <= 0) {
+			return null;
+		}
+		
+		for (Meeting meet : meetingIdList) {
+			if (meet.getId() == id) {
+				m = meet;
+			}
+		}
+
+		CMExceptions.checkIfDateInFuture(m.getDate());
+		return (PastMeeting) m;
 	}
 	
 	public FutureMeeting getFutureMeeting(int id) {
