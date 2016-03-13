@@ -285,6 +285,17 @@ public class ContactManagerImplTest {
 		assertTrue(mlo.get(0).getId() == 2 && mlo.get(1).getId() == 5);
 	}
 	
+	@Test
+	public void testsgetMeetingListOnNoDuplicates() {
+		addTestContacts();
+		addTestMeetings();
+		cm.addFutureMeeting(contacts, futureDate2);
+		//5 meetings have been added, 2 are duplicates
+		List<Meeting> mlo = cm.getMeetingListOn(futureDate2);
+		assertTrue(fml.size() == 2);
+		assertTrue(fml.get(0).getId() == 1 && fml.get(1).getId() == 5);
+	}
+	
 	/////////getPastMeetingList////////////
 	
 	/////////addNewPastMeeting////////////
