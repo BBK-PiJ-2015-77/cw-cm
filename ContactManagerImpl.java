@@ -31,7 +31,6 @@ public class ContactManagerImpl implements ContactManager {
 		int meetingID = getMeetingID();
 		fm = new FutureMeetingImpl(meetingID, date, contacts);
 		meetingIdList.add(fm);
-		//meetingCount++;
 		return (meetingID);
 	}
 	
@@ -48,7 +47,10 @@ public class ContactManagerImpl implements ContactManager {
 	}
 	
 	public FutureMeeting getFutureMeeting(int id) {
-		return null;
+		Meeting m = getMeeting(id);
+		Calendar currentDate = Calendar.getInstance();
+		CMExceptions.checkIfDateInPast(m.getDate());
+		return (FutureMeeting) m;
 	}
 	
 	public Meeting getMeeting(int id) {
