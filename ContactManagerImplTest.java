@@ -3,6 +3,8 @@ import org.junit.Test;
 import java.util.Calendar;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.List;
+import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -17,6 +19,8 @@ public class ContactManagerImplTest {
 	Set<Contact> contacts;
 	ContactManagerImpl cm;
 	String text;
+	Contact con1;
+	Contact con2;
 	
 	@Before
 	public void setUp() {
@@ -29,8 +33,8 @@ public class ContactManagerImplTest {
 		futureDate.add(Calendar.DAY_OF_YEAR, +1);
 		
 		contacts = new HashSet<Contact>();
-		Contact con1 = new ContactImpl(1, "Tom", "Good");
-		Contact con2 = new ContactImpl(2, "Tim", "Bad");
+		con1 = new ContactImpl(1, "Tom", "Good");
+		con2 = new ContactImpl(2, "Tim", "Bad");
 		contacts.add(con1);
 		contacts.add(con2);
 		text = "Meeting notes";
@@ -115,7 +119,6 @@ public class ContactManagerImplTest {
 	public void testsgetFutureMeeting() {
 		addTestContacts();
 		cm.addFutureMeeting(contacts, futureDate);
-		//check this line. future meeting returns an int
 		FutureMeeting fm = cm.getFutureMeeting(1);
 		assertEquals(futureDate, fm.getDate());
 		
@@ -163,6 +166,27 @@ public class ContactManagerImplTest {
 	}
 	
 	/////////getFutureMeetingList////////////
+	
+	@Test
+	public void testsgetFutureMeetingList() {
+		addTestMeetings();
+		List<Meeting> fml = cm.getFutureMeetingList(con1);
+		assertTrue(fml.get(0).getDate().before(fml.get(1).getDate()));
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testsgetFutureMeetingListBadContact() {
+		addTestMeetings();
+		Contact con3 = new ContactImpl(1, "Jane", "notes1");
+		List<Meeting> fml = cm.getFutureMeetingList(con3);
+	}
+	
+	@Test(expected=NullPointerException.class)
+	public void testsgetFutureMeetingListNullContact() {
+		addTestMeetings();
+		Contact con3 = null;
+		List<Meeting> fml = cm.getFutureMeetingList(con3);
+	}
 	
 	/////////getFutureMeetingList////////////
 	
@@ -395,6 +419,16 @@ public class ContactManagerImplTest {
 	private void addTestContacts() {
 		cm.addNewContact("Tom", "Good");
 		cm.addNewContact("Tim", "Bad");
+	}
+	
+	private void addTestMeetings() {
+		//adds 2 future meetings and 2 past meetings
+		cm.addFutureMeeting(contacts, futureDate);
+		cm.addNewPastMeeting(contacts, pastDate, text);
+		futureDate.add(Calendar.DAY_OF_YEAR, +1);
+		cm.addFutureMeeting(contacts, futureDate);
+		pastDate.set(2014,12,3);
+		cm.addNewPastMeeting(contacts, pastDate, text);
 	}
 	
 	private Set<Contact> addBadTestContacts() {
