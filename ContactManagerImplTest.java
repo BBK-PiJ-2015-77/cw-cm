@@ -111,6 +111,34 @@ public class ContactManagerImplTest {
 	
 	/////////getFutureMeeting////////////
 	
+	@Test
+	public void testsgetFutureMeeting() {
+		addTestContacts();
+		cm.addNewPastMeeting(contacts, futureDate, text);
+		FutureMeeting fm = cm.getFutureMeeting(1);
+		assertEquals(pastDate, fm.getDate());
+		
+		Set<Contact> futureMeetingContacts = fm.getContacts();
+		
+		assertTrue(equalsContactList(futureMeetingContacts,contacts));
+	}
+	
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testsgetFutureMeetingPastID() {
+		addTestContacts();
+		cm.addNewPastMeeting(contacts, pastDate, text);
+		cm.getFutureMeeting(1);
+	}
+	
+	@Test
+	public void testsgetFutureMeetingNull() {
+		addTestContacts();
+		cm.addNewPastMeeting(contacts, pastDate, text);
+		PastMeeting pastMeeting = cm.getPastMeeting(100);
+		assertEquals(pastMeeting,null);
+	}
+	
 	/////////getMeeting////////////
 	
 	@Test
