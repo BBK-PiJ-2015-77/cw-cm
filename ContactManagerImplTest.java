@@ -16,6 +16,7 @@ public class ContactManagerImplTest {
 	Calendar pastDate;
 	Calendar currentDate;
 	Calendar futureDate;
+	Calendar futureDate2;
 	Set<Contact> contacts;
 	ContactManagerImpl cm;
 	String text;
@@ -31,6 +32,8 @@ public class ContactManagerImplTest {
 		
 		futureDate = Calendar.getInstance();
 		futureDate.add(Calendar.DAY_OF_YEAR, +1);
+		futureDate2 = Calendar.getInstance();
+		futureDate2.set(2046,12,3);
 		
 		contacts = new HashSet<Contact>();
 		con1 = new ContactImpl(1, "Tom", "Good");
@@ -168,14 +171,24 @@ public class ContactManagerImplTest {
 	/////////getFutureMeetingList////////////
 	
 	@Test
-	public void testsgetFutureMeetingList() {
+	public void testsgetFutureMeetingListChronological() {
+		addTestContacts();
 		addTestMeetings();
 		List<Meeting> fml = cm.getFutureMeetingList(con1);
 		assertTrue(fml.get(0).getDate().before(fml.get(1).getDate()));
 	}
 	
+	@Test
+	public void testsgetFutureMeetingList() {
+		addTestContacts();
+		addTestMeetings();
+		List<Meeting> fml = cm.getFutureMeetingList(con1);
+		assertEquals(fml.get(0).getDate(),futureDate);
+	}
+	
 	@Test(expected=IllegalArgumentException.class)
 	public void testsgetFutureMeetingListBadContact() {
+		addTestContacts();
 		addTestMeetings();
 		Contact con3 = new ContactImpl(1, "Jane", "notes1");
 		cm.getFutureMeetingList(con3);
@@ -183,6 +196,7 @@ public class ContactManagerImplTest {
 	
 	@Test(expected=NullPointerException.class)
 	public void testsgetFutureMeetingListNullContact() {
+		addTestContacts();
 		addTestMeetings();
 		Contact con3 = null;
 		cm.getFutureMeetingList(con3);
@@ -190,16 +204,18 @@ public class ContactManagerImplTest {
 	
 	@Test
 	public void testsgetFutureMeetingListNoDuplicates() {
+		addTestContacts();
 		addTestMeetings();
-		cm.addFutureMeeting(contacts, futureDate);
+		cm.addFutureMeeting(contacts, futureDate2);
 		//5 meetings have been added, 2 are duplicates
 		List<Meeting> fml = cm.getFutureMeetingList(con1);
 		assertTrue(fml.size() == 2);
-		assertTrue(fml.get(0).getId() == 1 && fml.get(1).getId() == 3);
+		assertTrue(fml.get(0).getId() == 1 && fml.get(1).getId() == 5);
 	}
 	
 	@Test
 	public void testsgetFutureMeetingListNoMeeting() {
+		addTestContacts();
 		Contact con3 = new ContactImpl(3, "Jane", "fml no meeting");
 		cm.addNewContact("Jane", "fml no meeting");
 		List<Meeting> fml = cm.getFutureMeetingList(con3);
@@ -444,8 +460,7 @@ public class ContactManagerImplTest {
 		//adds 2 future meetings and 2 past meetings
 		cm.addFutureMeeting(contacts, futureDate);
 		cm.addNewPastMeeting(contacts, pastDate, text);
-		futureDate.add(Calendar.DAY_OF_YEAR, +1);
-		cm.addFutureMeeting(contacts, futureDate);
+		cm.addFutureMeeting(contacts, futureDate2);
 		pastDate.set(2014,12,3);
 		cm.addNewPastMeeting(contacts, pastDate, text);
 	}
