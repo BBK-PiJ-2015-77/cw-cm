@@ -223,7 +223,67 @@ public class ContactManagerImplTest {
 	}
 	
 	
-	/////////getFutureMeetingList////////////
+	/////////getMeetingListOn////////////
+	
+	@Test
+	public void testsgetMeetingListOn() {
+		addTestContacts();
+		addTestMeetings();
+		List<Meeting> mlo = cm.getMeetingListOn(futureDate);
+		assertTrue(mlo.get(0).getId() == 1);
+	}
+	
+	@Test
+	public void testsgetMeetingListOn2() {
+		addTestContacts();
+		addTestMeetings();
+		List<Meeting> mlo = cm.getMeetingListOn(futureDate);
+		assertTrue(equalsContactList(mlo.get(0).getContacts(),contacts));
+	}
+	
+	@Test
+	public void testsgetMeetingList2Meetings1Date() {
+		addTestContacts();
+		addTestMeetings();
+		Set<Contact> contacts2 = new HashSet<Contact>();
+		contacts2.add(con2);
+		cm.addFutureMeeting(contacts2, futureDate2);
+		List<Meeting> mlo = cm.getMeetingListOn(futureDate2);
+		assertTrue(mlo.size() == 2);
+	}
+	
+	@Test
+	public void testsgetMeetingListOnNoMeetings() {
+		addTestContacts();
+		addTestMeetings();
+		Calendar futureDate3 = Calendar.getInstance();
+		futureDate3.set(2020,12,3);
+		List<Meeting> mlo = cm.getMeetingListOn(futureDate3);
+		assertTrue(mlo.isEmpty());
+	}
+	
+	@Test(expected=NullPointerException.class)
+	public void testsgetMeetingListOnNullDate() {
+		addTestContacts();
+		addTestMeetings();
+		Calendar nullDate = null;
+		cm.getMeetingListOn(nullDate);
+	}
+	
+	@Test
+	public void testsgetMeetingListOnChronological() {
+		addTestContacts();
+		Calendar date1 = futureDate;
+		Calendar date2 = futureDate;
+		date1.set(2020,12,3,8,40);
+		date2.set(2020,12,3,10,40);
+		cm.addFutureMeeting(contacts, date2);
+		cm.addFutureMeeting(contacts, date1);
+		Calendar checkDate = Calendar.getInstance();
+		checkDate.set(2020,12,3);
+		List<Meeting> mlo = cm.getMeetingListOn(checkDate);
+		assertTrue(mlo.get(0).getId() == 2 && mlo.get(1).getId() == 5);
+	}
 	
 	/////////getPastMeetingList////////////
 	
