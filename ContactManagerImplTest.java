@@ -90,22 +90,48 @@ public class ContactManagerImplTest {
 		Set<Contact> pastMeetingContacts = pastMeeting.getContacts();
 		
 		assertTrue(equalsContactList(pastMeetingContacts,contacts));
-		assertEquals(pastMeeting.getDate(),pastDate);
-		assertEquals(pastMeeting.getNotes(),text);
 	}
 	
-	/**
+	
 	@Test(expected=IllegalArgumentException.class)
 	public void testsgetPastMeetingFutureID() {
-		//add future meeting
-		//then test that illegal argument exception occurs
+		addTestContacts();
+		cm.addFutureMeeting(contacts, futureDate);
+		cm.getPastMeeting(1);
 	}
-	*/
+	
+	@Test
+	public void testsgetPastMeetingNull() {
+		addTestContacts();
+		cm.addNewPastMeeting(contacts, pastDate, text);
+		PastMeeting pastMeeting = cm.getPastMeeting(100);
+		assertEquals(pastMeeting,null);
+	}
 	
 	
 	/////////getFutureMeeting////////////
 	
 	/////////getMeeting////////////
+	
+	@Test
+	public void testsgetMeeting() {
+		addTestContacts();
+		cm.addNewPastMeeting(contacts, pastDate, text);
+		Meeting meeting = cm.getMeeting(1);
+		assertEquals(pastDate, meeting.getDate());
+		
+		Set<Contact> meetingContacts = meeting.getContacts();
+		
+		assertTrue(equalsContactList(meetingContacts,contacts));
+	}
+	
+	@Test
+	public void testsgetMeetingNull() {
+		addTestContacts();
+		cm.addNewPastMeeting(contacts, pastDate, text);
+		Meeting meeting = cm.getMeeting(100);
+		assertEquals(meeting,null);
+	}
 	
 	/////////getFutureMeetingList////////////
 	
