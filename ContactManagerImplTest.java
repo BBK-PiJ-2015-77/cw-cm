@@ -14,6 +14,7 @@ import static org.junit.Assert.assertFalse;
 public class ContactManagerImplTest {
 	
 	Calendar pastDate;
+	Calendar pastDate2;
 	Calendar currentDate;
 	Calendar futureDate;
 	Calendar futureDate2;
@@ -27,6 +28,8 @@ public class ContactManagerImplTest {
 	public void setUp() {
 		pastDate = Calendar.getInstance();
 		pastDate.set(2015,12,3);
+		pastDate2 = Calendar.getInstance();
+		pastDate2.set(2014,12,3);
 		
 		currentDate = Calendar.getInstance();
 		
@@ -270,13 +273,11 @@ public class ContactManagerImplTest {
 		cm.getMeetingListOn(nullDate);
 	}
 	
-	//doesnt work, index out of bounds, there is only 1 item
-	//it only sees the second one (date1)
 	@Test
 	public void testsgetMeetingListOnChronological() {
 		addTestContacts();
-		Calendar date1 = futureDate;
-		Calendar date2 = futureDate;
+		Calendar date1 = Calendar.getInstance();
+		Calendar date2 = Calendar.getInstance();
 		date1.set(2020,12,3,8,40);
 		date2.set(2020,12,3,10,40);
 		cm.addFutureMeeting(contacts, date2);
@@ -284,10 +285,7 @@ public class ContactManagerImplTest {
 		Calendar checkDate = Calendar.getInstance();
 		checkDate.set(2020,12,3);
 		List<Meeting> mlo = cm.getMeetingListOn(checkDate);
-		//assertTrue(mlo.get(0).getDate().before(mlo.get(1).getDate()));
-		assertTrue(mlo.size() == 2);
-		//assertTrue(mlo.get(0).getId() == 2);
-		//assertTrue(date1.equals(date2));
+		assertTrue(mlo.get(0).getDate().before(mlo.get(1).getDate()));
 	}
 	
 	//need to re-do so that remove duplicates isn't necessary, only that id's are unique
@@ -301,14 +299,14 @@ public class ContactManagerImplTest {
 		assertEquals(1,mlo.size());
 	}
 	
-	/////////getPastMeetingList////////////
+	/////////getPastMeetingListFor////////////
 	
 	@Test
 	public void testsgetPastMeetingFor() {
 		addTestContacts();
 		addTestMeetings();
-		List<Meeting> pml = cm.getPastMeetingListFor(con1);
-		assertTrue(pml.get(0).getId() == 1);
+		List<PastMeeting> pml = cm.getPastMeetingListFor(con1);
+		assertTrue(pml.get(0).getId() == 4);
 	}
 
 	
@@ -331,7 +329,7 @@ public class ContactManagerImplTest {
 	
 	/**
 	@Test
-	public void testsgetPastMeetingListNoDuplicates() {
+	public void testsgetPastMeetingListForNoDuplicates() {
 		addTestContacts();
 		addTestMeetings();
 		cm.addNewPastMeeting(contacts, futureDate2, text);
@@ -347,8 +345,16 @@ public class ContactManagerImplTest {
 		addTestContacts();
 		Contact con3 = new ContactImpl(3, "Jane", "fml no meeting");
 		cm.addNewContact("Jane", "fml no meeting");
-		List<Meeting> pml = cm.getPastMeetingListFor(con3);
+		List<PastMeeting> pml = cm.getPastMeetingListFor(con3);
 		assertTrue(pml.isEmpty());
+	}
+	
+	@Test
+	public void testsgetPastMeetingListForChronological() {
+		addTestContacts();
+		addTestMeetings();
+		List<PastMeeting> pml = cm.getPastMeetingListFor(con1);
+		assertTrue(pml.get(0).getDate().before(pml.get(1).getDate()));
 	}
 	
 	/////////addNewPastMeeting////////////
@@ -585,8 +591,7 @@ public class ContactManagerImplTest {
 		cm.addFutureMeeting(contacts, futureDate);
 		cm.addNewPastMeeting(contacts, pastDate, text);
 		cm.addFutureMeeting(contacts, futureDate2);
-		pastDate.set(2014,12,3);
-		cm.addNewPastMeeting(contacts, pastDate, text);
+		cm.addNewPastMeeting(contacts, pastDate2, text);
 	}
 	
 	private Set<Contact> addBadTestContacts() {
