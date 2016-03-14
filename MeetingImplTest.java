@@ -25,7 +25,6 @@ public class MeetingImplTest {
 		contacts.add(con2);
 		
 		mi = new MeetingImplMock(id, date, contacts);
-		//doesnt work now that MeetingImpl is an abstract class
 	}
 	
 	@Test
@@ -62,7 +61,6 @@ public class MeetingImplTest {
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testsemptyContacts() {
-		//contacts = null;
 		contacts.clear();
 		mi = new MeetingImplMock(id, date, contacts);
 	}
