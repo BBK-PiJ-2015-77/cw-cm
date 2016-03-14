@@ -4,15 +4,37 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Collections;
+import java.io.File;
+import java.io.ObjectInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.BufferedInputStream;
+import java.io.ObjectOutputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
 
 public class ContactManagerImpl implements ContactManager {
 	
 	private Set<Contact> contactIdList;
-	private Set <Meeting> meetingIdList;
+	private Set<Meeting> meetingIdList;
+	private final String FILENAME = "contactmanager.txt";
 	
 	public ContactManagerImpl() {
-		contactIdList = new HashSet<Contact>();
-		meetingIdList = new HashSet<Meeting>();
+		File fileOut = new File(FILENAME);
+		if (fileOut.exists()) {
+			try (ObjectInputStream input = new ObjectInputStream(new BufferedInputStream(new FileInputStream(FILENAME)))) {
+				contactIdList = (Set<Contact>) input.readObject();
+				meetingIdList = (Set<Meeting>) input.readObject();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		} else {
+			contactIdList = new HashSet<Contact>();
+			meetingIdList = new HashSet<Meeting>();
+		}
+		
 	}
 	
 	/**
@@ -267,7 +289,21 @@ public class ContactManagerImpl implements ContactManager {
 	 */
     @Override
     public void flush() {
-    	//do nothing
+    	File fileOut = new File(FILENAME);
+    	if (!fileOut.exists()) {
+    		try {
+    			fileOut.createNewFile();
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+    	}
+    	
+    	try (ObjectOutputStream output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(FILENAME)))) {
+    		output.writeObject(contactIdList);
+    		output.writeObject(meetingIdList);
+    	} catch (IOException e) {
+			e.printStackTrace();
+    	}
     }
     
     /**
