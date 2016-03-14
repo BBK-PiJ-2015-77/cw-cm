@@ -1,10 +1,12 @@
 import org.junit.Before;
+import org.junit.After;
 import org.junit.Test;
 import java.util.Calendar;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
+import java.io.File;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -46,6 +48,14 @@ public class ContactManagerImplTest {
 		text = "Meeting notes";
 		
 		cm = new ContactManagerImpl();
+	}
+	
+	@After
+	public void finish() {
+		File fileOut = new File("contactmanager.txt");
+		if(fileOut.exists()) {
+			fileOut.delete();
+		}
 	}
 	
 	/////////addFutureMeeting////////////
@@ -602,7 +612,7 @@ public class ContactManagerImplTest {
 		Set<Contact> cmContactList = cm.getContacts(5032);
 	}
     
-    /////////flush////////////
+	/////////flush////////////
 	
 	@Test
 	public void testsFlushContacts() {
@@ -612,7 +622,7 @@ public class ContactManagerImplTest {
 		
 		ContactManager cm2 = new ContactManagerImpl();
 		Set<Contact> cmContactList2 = cm2.getContacts(1, 2);
-		assertEquals(cmContactList,cmContactList2);
+		assertTrue(equalsContactList(cmContactList,cmContactList2));
 	}
 	
 	@Test
@@ -624,7 +634,10 @@ public class ContactManagerImplTest {
 		
 		ContactManager cm2 = new ContactManagerImpl();
 		List<PastMeeting> pml2 = cm2.getPastMeetingListFor(con1);
-		assertEquals(pml,pml2);
+		assertTrue(pml.get(0).getId() == pml2.get(0).getId());
+		assertTrue(equalsContactList(pml.get(0).getContacts(),pml2.get(0).getContacts()));
+		assertTrue(pml.get(1).getId() == pml2.get(1).getId());
+		assertTrue(equalsContactList(pml.get(1).getContacts(),pml2.get(1).getContacts()));
 	}
 	
 	/////private methods here/////
