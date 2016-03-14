@@ -93,14 +93,7 @@ public class ContactManagerImpl implements ContactManager {
 			if (m instanceof FutureMeeting) {
 				fml.add(m);
 			}
-		}
-		////////////////////////////////////////
-		/**
-		if (checkDuplicateMeetings(fml)) {
-			fml = removeDuplicateMeetings(fml);
-		}
-		*/
-		
+		}		
 		Collections.sort(fml, new CompareDates());
 		for (Meeting m : fml) {
 			if (!containsContact(m.getContacts(),contact)) {
@@ -127,10 +120,6 @@ public class ContactManagerImpl implements ContactManager {
 		if (mlo.isEmpty()) {
 			return mlo;
 		}
-		////////////////////////////////////////
-		/**
-		mlo = removeDuplicateMeetings(mlo);
-		*/
 		Collections.sort(mlo, new CompareDates());
 		return mlo;
 	}
@@ -151,14 +140,6 @@ public class ContactManagerImpl implements ContactManager {
 				pml.add((PastMeeting) m); 
 			}
 		}
-		////////////////////////////////////////
-		/**
-		//remove duplicates
-		if (checkDuplicateMeetings(pml)) {
-			pml = removeDuplicateMeetings(pml);
-		}
-		*/
-		
 		Collections.sort(pml, new CompareDates());
 		for (PastMeeting m : pml) {
 			if (!containsContact(m.getContacts(),contact)) {
@@ -410,69 +391,6 @@ public class ContactManagerImpl implements ContactManager {
 			
 		}
 		return result;
-	}
-	
-	/**
-	 * Checks whether a List<Meeting> contains duplicate Meetings
-	 *
-	 * @param meetings the list of Meetings to compare
-	 * @return if the list contains a duplicate (true) or not (false)
-	 */
-	private boolean checkDuplicateMeetings(List<Meeting> meetings) {
-		boolean result = false;
-		for (int i = 0; i<meetings.size(); i++) {
-			for (int j = (i+1); j<meetings.size(); j++) {
-				if (equalsMeeting(meetings.get(i),meetings.get(j))) {
-					result = true;
-				}
-			}
-		}
-		return result;
-	}
-	
-	/**
-	 * Removes any duplicate Meetings from a List<Meeting> and returns
-	 * a List<Meeting> of unique Meetings
-	 *
-	 * @param meetings the list of Meetings to check
-	 * @return a List<Meeting> of unique Meetings, having had any duplicates removed
-	 */
-	private List<Meeting> removeDuplicateMeetings(List<Meeting> meetings) {
-		List<Meeting> uniqueList = meetings;
-		
-		boolean result = false;
-		for (int i = 0; i<meetings.size(); i++) {
-			for (int j = (i+1); j<meetings.size(); j++) {
-				if (equalsMeeting(meetings.get(i),meetings.get(j))) {
-					uniqueList.remove(meetings.get(j));
-					j--;
-				}
-			}
-		}
-		return uniqueList;
-	}
-	
-	/**
-	 * Compares whether two Meeting objects are the same
-	 *
-	 * @param m1 the first Meeting to compare
-	 * @param m2 the second Meeting to compare
-	 * @return whether these two are the same (true) or not (false)
-	 */
-	private boolean equalsMeeting(Meeting m1, Meeting m2) {
-		boolean result = false;
-		if (m1.getId() == m2.getId() &&
-			equalsDate(m1.getDate(),m2.getDate()) && 
-			equalContactList(m1.getContacts(), m2.getContacts())) {
-				result = true;
-				return result;
-		} else if  (equalsDate(m1.getDate(),m2.getDate()) && 
-					equalContactList(m1.getContacts(), m2.getContacts())) {
-						result = true;
-						return result;
-		} else {
-			return result;
-		}
 	}
 	
 	/**
