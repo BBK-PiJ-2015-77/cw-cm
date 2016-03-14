@@ -408,6 +408,8 @@ public class ContactManagerImplTest {
 		addTestContacts();
 		addTestMeetings();
 		//Meeting 1 & 3 are future meetings
+		//need to change the date of the FutureMeeting so that it is now in the past
+		futureDate2.set(2015,12,25);
 		text = "Testing addMeetingNotes()";
 		PastMeeting pm = cm.addMeetingNotes(3,text);
 		assertEquals(text, pm.getNotes());
@@ -419,7 +421,7 @@ public class ContactManagerImplTest {
 		addTestMeetings();
 		//Meeting 2 & 4 are future meetings
 		text = "Testing addMeetingNotes()";
-		String expectedText = "Meeting notes + Testing addMeetingNotes()"
+		String expectedText = "Meeting notes + Testing addMeetingNotes()";
 		PastMeeting pm = cm.addMeetingNotes(2,text);
 		assertEquals(expectedText, pm.getNotes());
 	}
@@ -432,7 +434,7 @@ public class ContactManagerImplTest {
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
-	public void testsaddMeetingNotesNoMeeting() {
+	public void testsaddMeetingNotesNoMeeting2() {
 		//IllegalArgumentException if meeting doesn't exist
 		addTestContacts();
 		addTestMeetings();
@@ -440,18 +442,21 @@ public class ContactManagerImplTest {
 	}
 	
 	@Test(expected=IllegalStateException.class)
-	public void testsaddMeetingNotesNoMeeting() {
-		//IllegalArgumentException if meeting doesn't exist
+	public void testsaddMeetingNotesFutureMeeting2() {
+		//IllegalStateException if meeting is in future
 		addTestContacts();
 		addTestMeetings();
-		cm.addMeetingNotes(100,text);
+		cm.addMeetingNotes(3,text);
 	}
 	
-	
-	
-	//IllegalStateException if the meeting date is set for the future
-	
-	//NullPointerException if notes is null
+	@Test(expected=NullPointerException.class)
+	public void testsaddMeetingNotesNullNotes() {
+		//IllegalStateException if meeting is in future
+		addTestContacts();
+		addTestMeetings();
+		text = null;
+		cm.addMeetingNotes(2,text);
+	}
 	
 	
     /////////addNewContact////////////
