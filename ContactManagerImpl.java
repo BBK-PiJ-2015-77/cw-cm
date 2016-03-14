@@ -15,6 +15,10 @@ public class ContactManagerImpl implements ContactManager {
 		meetingIdList = new HashSet<Meeting>();
 	}
 	
+	/**
+	 * @see ContactManager
+	 */
+	@Override
 	public int addFutureMeeting(Set<Contact> contacts, Calendar date) {
 		CMExceptions.checkIfDateInPast(date);
 		
@@ -30,9 +34,11 @@ public class ContactManagerImpl implements ContactManager {
 		return (meetingID);
 	}
 	
+	/**
+	 * @see ContactManager
+	 */
+	@Override
 	public PastMeeting getPastMeeting(int id) {
-		//Have to explicitly return null, otherwise, when casting
-		//the Meeting m as a PastMeeting, it will throw a NullPointerException
 		if (id > (meetingIdList.size() + 1) || id <= 0) {
 			return null;
 		}
@@ -44,6 +50,10 @@ public class ContactManagerImpl implements ContactManager {
 		return (PastMeeting) m;
 	}
 	
+	/**
+	 * @see ContactManager
+	 */
+	@Override
 	public FutureMeeting getFutureMeeting(int id) {
 		Meeting m = getMeeting(id);
 		Calendar currentDate = Calendar.getInstance();
@@ -51,6 +61,10 @@ public class ContactManagerImpl implements ContactManager {
 		return (FutureMeeting) m;
 	}
 	
+	/**
+	 * @see ContactManager
+	 */
+	@Override
 	public Meeting getMeeting(int id) {
 		Meeting m = null;
 		if (id > (meetingIdList.size() + 1) || id <= 0) {
@@ -65,30 +79,25 @@ public class ContactManagerImpl implements ContactManager {
 		return m;
 	}
 	
+	/**
+	 * @see ContactManager
+	 */
+	@Override
 	public List<Meeting> getFutureMeetingList(Contact contact) {
 		CMExceptions.setNonNullObject(contact);
 		if (!containsContact(contactIdList, contact)) {
 			throw new IllegalArgumentException("An invalid contact has been entered");
 		}
-		
 		List<Meeting> fml = new ArrayList<Meeting>();
-		
-		//get an unsorted list of future meetings
 		for (Meeting m : meetingIdList) {
 			if (m instanceof FutureMeeting) {
 				fml.add(m);
 			}
 		}
-		
-		//remove duplicates
 		if (checkDuplicateMeetings(fml)) {
 			fml = removeDuplicateMeetings(fml);
 		}
-		
-		//order chronologically
 		Collections.sort(fml, new CompareDates());
-		
-		//check if the contact is contained in any of the meetings,
 		for (Meeting m : fml) {
 			if (!containsContact(m.getContacts(),contact)) {
 				fml.remove(m);
@@ -97,10 +106,12 @@ public class ContactManagerImpl implements ContactManager {
 		return fml;
 	}
 	
+	/**
+	 * @see ContactManager
+	 */
+	@Override
 	public List<Meeting> getMeetingListOn(Calendar date) {
-		//nullpointer if date is null
 		CMExceptions.setNonNullObject(date);
-		//get an unsorted list of meetings on this date
 		List<Meeting> mlo = new ArrayList<Meeting>();
 		for (Meeting m : meetingIdList) {
 			if (m.getDate().get(Calendar.YEAR) == date.get(Calendar.YEAR) &&
@@ -109,18 +120,18 @@ public class ContactManagerImpl implements ContactManager {
 					mlo.add(m);
 			}
 		}
-		//empty list if no date
 		if (mlo.isEmpty()) {
 			return mlo;
 		}
-		//remove duplicates
 		mlo = removeDuplicateMeetings(mlo);
-		//order chronologically
 		Collections.sort(mlo, new CompareDates());
-
 		return mlo;
 	}
 	
+	/**
+	 * @see ContactManager
+	 */
+	@Override
 	public List<PastMeeting> getPastMeetingListFor(Contact contact) {
 		CMExceptions.setNonNullObject(contact);
 		if (!containsContact(contactIdList, contact)) {
@@ -128,11 +139,8 @@ public class ContactManagerImpl implements ContactManager {
 		}
 		
 		List<PastMeeting> pml = new ArrayList<PastMeeting>();
-		
-		//get an unsorted list of future meetings
 		for (Meeting m : meetingIdList) {
 			if (m instanceof PastMeeting) {
-				//create a new pastmeeting and add it to the list
 				pml.add((PastMeeting) m); 
 			}
 		}
@@ -144,10 +152,7 @@ public class ContactManagerImpl implements ContactManager {
 		}
 		*/
 		
-		//order chronologically
 		Collections.sort(pml, new CompareDates());
-		
-		//check if the contact is contained in any of the meetings,
 		for (PastMeeting m : pml) {
 			if (!containsContact(m.getContacts(),contact)) {
 				pml.remove(m);
@@ -156,22 +161,25 @@ public class ContactManagerImpl implements ContactManager {
 		return pml;
 	}
 	
+	/**
+	 * @see ContactManager
+	 */
+	@Override
 	public void addNewPastMeeting(Set<Contact> contacts, Calendar date, String text) {
-		//Already throws IllegalArgumentException if contacts is empty
-		//using PastMeetingImpl
-		
-		//Throw IllegalArgumentException if any contacts don't exist
 		for (Contact con : contacts) {
 			if (!containsContact(contactIdList,con)) {
 				throw new IllegalArgumentException("An invalid contact has been entered");
 			}
 		}
-
 		int meetingID = getMeetingID();
 		PastMeeting pm = new PastMeetingImpl(meetingID, date, contacts, text);
 		meetingIdList.add(pm);
 	}
-
+	
+	/**
+	 * @see ContactManager
+	 */
+    @Override
     public PastMeeting addMeetingNotes(int id, String text) {
     	if (!checkMeeting(id)) {
     		throw new IllegalArgumentException("An invalid Meeting ID has been entered");
@@ -179,7 +187,6 @@ public class ContactManagerImpl implements ContactManager {
     	if (text.equals(null)) {
     		throw new NullPointerException("Null meeting notes have been entered");
     	}
-    	
     	Calendar currentDate = Calendar.getInstance();
     	int pmID = 0;
     	Calendar pmDate = null;
@@ -188,7 +195,6 @@ public class ContactManagerImpl implements ContactManager {
     	StringBuilder sb = new StringBuilder();
     	PastMeeting newPastmeeting = null;
     	Meeting meetingToRemove = null;
-    	
     	for (Meeting m : meetingIdList) {
     		if(m.getId() == id) {
     			pmID = m.getId();
@@ -197,7 +203,6 @@ public class ContactManagerImpl implements ContactManager {
     			meetingToRemove = m;
     		}
     	}
-    	
     	if (meetingToRemove instanceof PastMeeting) {
     		PastMeeting mtr = (PastMeeting) meetingToRemove;
     		sb.append(mtr.getNotes());
@@ -214,20 +219,23 @@ public class ContactManagerImpl implements ContactManager {
     	
     	return newPastmeeting;
     }
-
+	
+	/**
+	 * @see ContactManager
+	 */
+    @Override
     public int addNewContact(String name, String notes) {
     	int id = getContactID();
     	Contact newContact = new ContactImpl(id, name, notes);
     	contactIdList.add(newContact);
     	return id;
-    	//create unique id
-    	//create a new contact
-    	//add it to list
-    	//return id
     }
-
+	
+	/**
+	 * @see ContactManager
+	 */
+    @Override
     public Set<Contact> getContacts(int... ids) {
-    	
     	if (ids.length == 0) {
     		throw new IllegalArgumentException("An ID must be entered as an argument");
     	} else {
@@ -246,7 +254,11 @@ public class ContactManagerImpl implements ContactManager {
     		return newContactList;
     	}
     }
-
+	
+	/**
+	 * @see ContactManager
+	 */
+    @Override
     public Set<Contact> getContacts(String name) {
     	Set<Contact> newContactList = new HashSet<Contact>();
     	CMExceptions.setNonNullObject(name);
@@ -260,29 +272,42 @@ public class ContactManagerImpl implements ContactManager {
     		}
     		return newContactList;
     	}
-    	//check if that each element exists in the current contact list
-    	//if it is, add it to a new list
-    	//return the list
-    	
-    	
     }
     
+    /**
+	 * @see ContactManager
+	 */
+    @Override
     public void flush() {
     	//do nothing
     }
     
-    
-    
+    /**
+	 * Creates a unique Meeting ID
+	 *
+	 * @return a unique int value
+	 */
     private int getMeetingID() {
     	int meetingCount = meetingIdList.size();
     	return (meetingCount + 1);
     }
     
+    /**
+	 * Creates a unique Contact ID
+	 *
+	 * @return a unique int value
+	 */
     private int getContactID() {
     	int id = contactIdList.size();
     	return (id + 1);
     }
     
+    /**
+	 * Checks whether a Contact exists in the contactIdList
+	 *
+	 * @param i the Contact ID to check
+	 * @return whether the Contact exists (true) or not (false)
+	 */
     private boolean checkContact(int i) {
     	boolean result = false;
     	for ( Contact con : contactIdList) {
@@ -293,6 +318,12 @@ public class ContactManagerImpl implements ContactManager {
     	return result;
     }
     
+    /**
+	 * Checks whether a Meeting exists in the meetingIdList
+	 *
+	 * @param i the Meeting ID to check
+	 * @return whether the Meeting exists (true) or not (false)
+	 */
     private boolean checkMeeting(int i) {
     	boolean result = false;
     	for ( Meeting m : meetingIdList) {
@@ -303,6 +334,13 @@ public class ContactManagerImpl implements ContactManager {
     	return result;
     }
     
+    /**
+	 * Compares whether two Contact objects are the same
+	 *
+	 * @param con1 the first Contact to compare
+	 * @param con2 the second Contact to compare
+	 * @return whether these two are the same (true) or not (false)
+	 */
     private boolean equalsContact(Contact con1, Contact con2) {
 		boolean result = false;
 		if (con1.getId() == con2.getId() &&
@@ -315,6 +353,13 @@ public class ContactManagerImpl implements ContactManager {
 		}
 	}
 	
+	/**
+	 * Checks a Set<Contact> to see if it contains a specified Contact
+	 *
+	 * @param list the Set<Contact> to check
+	 * @param con the Contact to check for
+	 * @return whether con is in the list (true) or not (false)
+	 */
 	private boolean containsContact(Set<Contact> list, Contact con) {
 		boolean result = false;
 		if (list.isEmpty()) {
@@ -330,6 +375,13 @@ public class ContactManagerImpl implements ContactManager {
 		return result;
 	}
 	
+	/**
+	 * Compares whether two Set<Contact> are the same
+	 *
+	 * @param list1 the first Set<Contact> to compare
+	 * @param list2 the second Set<Contact> to compare
+	 * @return whether these two are the same (true) or not (false)
+	 */
 	private boolean equalContactList(Set<Contact> list1, Set<Contact> list2) {
 		boolean result = true;
 		if (list1.isEmpty() || list2.isEmpty()) {
@@ -353,7 +405,12 @@ public class ContactManagerImpl implements ContactManager {
 		return result;
 	}
 	
-	
+	/**
+	 * Checks whether a List<Meeting> contains duplicate Meetings
+	 *
+	 * @param meetings the list of Meetings to compare
+	 * @return if the list contains a duplicate (true) or not (false)
+	 */
 	private boolean checkDuplicateMeetings(List<Meeting> meetings) {
 		boolean result = false;
 		for (int i = 0; i<meetings.size(); i++) {
@@ -366,6 +423,13 @@ public class ContactManagerImpl implements ContactManager {
 		return result;
 	}
 	
+	/**
+	 * Removes any duplicate Meetings from a List<Meeting> and returns
+	 * a List<Meeting> of unique Meetings
+	 *
+	 * @param meetings the list of Meetings to check
+	 * @return a List<Meeting> of unique Meetings, having had any duplicates removed
+	 */
 	private List<Meeting> removeDuplicateMeetings(List<Meeting> meetings) {
 		List<Meeting> uniqueList = meetings;
 		
@@ -381,7 +445,13 @@ public class ContactManagerImpl implements ContactManager {
 		return uniqueList;
 	}
 	
-	
+	/**
+	 * Compares whether two Meeting objects are the same
+	 *
+	 * @param m1 the first Meeting to compare
+	 * @param m2 the second Meeting to compare
+	 * @return whether these two are the same (true) or not (false)
+	 */
 	private boolean equalsMeeting(Meeting m1, Meeting m2) {
 		boolean result = false;
 		if (m1.getId() == m2.getId() &&
@@ -398,6 +468,13 @@ public class ContactManagerImpl implements ContactManager {
 		}
 	}
 	
+	/**
+	 * Compares whether two Calendar objects are the same date
+	 *
+	 * @param date1 the first date to compare
+	 * @param date2 the second date to compare
+	 * @return whether these two are the same date (true) or not (false)
+	 */
 	private boolean equalsDate(Calendar date1, Calendar date2) {
 		boolean result = false;
 		if (date1.get(Calendar.YEAR) == date2.get(Calendar.YEAR) &&
