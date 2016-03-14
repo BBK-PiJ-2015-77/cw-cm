@@ -604,7 +604,30 @@ public class ContactManagerImplTest {
     
     /////////flush////////////
 	
-	//private methods here
+	@Test
+	public void testsFlushContacts() {
+		addTestContacts();
+		Set<Contact> cmContactList = cm.getContacts(1, 2);
+		cm.flush();
+		
+		ContactManager cm2 = new ContactManagerImpl();
+		Set<Contact> cmContactList2 = cm2.getContacts(1, 2);
+		assertEquals(cmContactList,cmContactList2);
+	}
+	
+	@Test
+	public void testsFlushMeetings() {
+		addTestContacts();
+		addTestMeetings();
+		List<PastMeeting> pml = cm.getPastMeetingListFor(con1);
+		cm.flush();
+		
+		ContactManager cm2 = new ContactManagerImpl();
+		List<PastMeeting> pml2 = cm2.getPastMeetingListFor(con1);
+		assertEquals(pml,pml2);
+	}
+	
+	/////private methods here/////
 	
 	private void addTestContacts() {
 		cm.addNewContact("Tom", "Good");
