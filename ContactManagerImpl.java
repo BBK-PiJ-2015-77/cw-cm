@@ -13,8 +13,8 @@ public class ContactManagerImpl implements ContactManager {
 	//pastMeetingIdList?
 	//futureMeetingIdList?
 	//private Calendar currentDate = Calendar.getInstance();
-	FutureMeetingImpl fm;
-	PastMeetingImpl pm;
+	//FutureMeetingImpl fm;
+	//PastMeetingImpl pm;
 	
 	public ContactManagerImpl() {
 		contactIdList = new HashSet<Contact>();
@@ -31,7 +31,7 @@ public class ContactManagerImpl implements ContactManager {
 		}
 		
 		int meetingID = getMeetingID();
-		fm = new FutureMeetingImpl(meetingID, date, contacts);
+		FutureMeeting fm = new FutureMeetingImpl(meetingID, date, contacts);
 		meetingIdList.add(fm);
 		return (meetingID);
 	}
@@ -44,7 +44,9 @@ public class ContactManagerImpl implements ContactManager {
 		}
 		Meeting m = getMeeting(id);
 		Calendar currentDate = Calendar.getInstance();
-		CMExceptions.checkIfDateInFuture(m.getDate());
+		if (m.getDate().after(currentDate)) {
+			throw new IllegalStateException("The date can not be set in the future");
+		}
 		return (PastMeeting) m;
 	}
 	
@@ -98,16 +100,66 @@ public class ContactManagerImpl implements ContactManager {
 				fml.remove(m);
 			}
 		}
-		
 		return fml;
 	}
 	
-	public List<Meeting> getFutureMeetingList(Calendar date) {
-		return null;
+	public List<Meeting> getMeetingListOn(Calendar date) {
+		//nullpointer if date is null
+		CMExceptions.setNonNullObject(date);
+		//get an unsorted list of meetings on this date
+		List<Meeting> mlo = new ArrayList<Meeting>();
+		for (Meeting m : meetingIdList) {
+			if (m.getDate().get(Calendar.YEAR) == date.get(Calendar.YEAR) &&
+				m.getDate().get(Calendar.MONTH) == date.get(Calendar.MONTH) &&
+				m.getDate().get(Calendar.DATE) == date.get(Calendar.DATE)) {
+					mlo.add(m);
+			}
+		}
+		//empty list if no date
+		if (mlo.isEmpty()) {
+			return mlo;
+		}
+		//remove duplicates
+		mlo = removeDuplicateMeetings(mlo);
+		//order chronologically
+		Collections.sort(mlo, new CompareDates());
+
+		return mlo;
 	}
 	
-	public List<PastMeeting> getPastMeetingList(Contact contact) {
-		return null;
+	public List<PastMeeting> getPastMeetingListFor(Contact contact) {
+		CMExceptions.setNonNullObject(contact);
+		if (!containsContact(contactIdList, contact)) {
+			throw new IllegalArgumentException("An invalid contact has been entered");
+		}
+		
+		List<PastMeeting> pml = new ArrayList<PastMeeting>();
+		
+		//get an unsorted list of future meetings
+		for (Meeting m : meetingIdList) {
+			if (m instanceof PastMeeting) {
+				//create a new pastmeeting and add it to the list
+				pml.add((PastMeeting) m); 
+			}
+		}
+		
+		/**
+		//remove duplicates
+		if (checkDuplicateMeetings(pml)) {
+			pml = removeDuplicateMeetings(pml);
+		}
+		*/
+		
+		//order chronologically
+		Collections.sort(pml, new CompareDates());
+		
+		//check if the contact is contained in any of the meetings,
+		for (PastMeeting m : pml) {
+			if (!containsContact(m.getContacts(),contact)) {
+				pml.remove(m);
+			}
+		}
+		return pml;
 	}
 	
 	public void addNewPastMeeting(Set<Contact> contacts, Calendar date, String text) {
@@ -122,11 +174,15 @@ public class ContactManagerImpl implements ContactManager {
 		}
 
 		int meetingID = getMeetingID();
-		pm = new PastMeetingImpl(meetingID, date, contacts, text);
+		PastMeeting pm = new PastMeetingImpl(meetingID, date, contacts, text);
 		meetingIdList.add(pm);
 	}
 
     public PastMeeting addMeetingNotes(int id, String text) {
+    	
+    	for (Meeting m : meetingIdList) {
+    		
+    	}
     	return null;
     }
 
@@ -279,6 +335,7 @@ public class ContactManagerImpl implements ContactManager {
 			for (int j = (i+1); j<meetings.size(); j++) {
 				if (equalsMeeting(meetings.get(i),meetings.get(j))) {
 					uniqueList.remove(meetings.get(j));
+					j--;
 				}
 			}
 		}
@@ -289,17 +346,29 @@ public class ContactManagerImpl implements ContactManager {
 	private boolean equalsMeeting(Meeting m1, Meeting m2) {
 		boolean result = false;
 		if (m1.getId() == m2.getId() &&
-			m1.getDate().equals(m2.getDate()) && 
+			equalsDate(m1.getDate(),m2.getDate()) && 
 			equalContactList(m1.getContacts(), m2.getContacts())) {
 				result = true;
 				return result;
-		} else if  (m1.getDate().equals(m2.getDate()) && 
+		} else if  (equalsDate(m1.getDate(),m2.getDate()) && 
 					equalContactList(m1.getContacts(), m2.getContacts())) {
 						result = true;
 						return result;
 		} else {
 			return result;
 		}
+	}
+	
+	private boolean equalsDate(Calendar date1, Calendar date2) {
+		boolean result = false;
+		if (date1.get(Calendar.YEAR) == date2.get(Calendar.YEAR) &&
+			date1.get(Calendar.MONTH) == date2.get(Calendar.MONTH) &&
+			date1.get(Calendar.DATE) == date2.get(Calendar.DATE) &&
+			date1.get(Calendar.HOUR) == date2.get(Calendar.HOUR) &&
+			date1.get(Calendar.MINUTE) == date2.get(Calendar.MINUTE)) {
+				result = true;
+		}
+		return result;
 	}
 	
 }
