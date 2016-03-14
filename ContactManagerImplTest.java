@@ -642,11 +642,23 @@ public class ContactManagerImplTest {
 	
 	/////private methods here/////
 	
+	/**
+	 * Adds two Contacts to the Vontact list
+	 *
+	 * @param void
+	 * @return void
+	 */
 	private void addTestContacts() {
 		cm.addNewContact("Tom", "Good");
 		cm.addNewContact("Tim", "Bad");
 	}
 	
+	/**
+	 * Adds two FutureMeetings and 2 PastMeetings to the Meeting list
+	 *
+	 * @param void
+	 * @return void
+	 */
 	private void addTestMeetings() {
 		//adds 2 future meetings and 2 past meetings
 		cm.addFutureMeeting(contacts, futureDate);
@@ -655,6 +667,13 @@ public class ContactManagerImplTest {
 		cm.addNewPastMeeting(contacts, pastDate2, text);
 	}
 	
+	/**
+	 * Creates a Set<Contact> of Contacts that aren't on the Contact
+	 * Manager Contact list
+	 *
+	 * @param void
+	 * @return a Set<Contact> of contacts that aren;t on the Contact list
+	 */
 	private Set<Contact> addBadTestContacts() {
 		Set<Contact> badContacts = new HashSet<Contact>();
 		Contact con1 = new ContactImpl(1, "Jane", "notes1");
@@ -664,6 +683,15 @@ public class ContactManagerImplTest {
 		return badContacts;
 	}
 	
+	/**
+	 * Compares whether two Contact objects are the same. This same method
+	 * is in the ContactManagerImpl class, but it is private and should
+	 * remain inaccessible.
+	 *
+	 * @param con1 the first Contact to compare
+	 * @param con2 the second Contact to compare
+	 * @return whether these two are the same (true) or not (false)
+	 */
 	private boolean equalsContact(Contact con1, Contact con2) {
 		boolean result = false;
 		if (con1.getId() == con2.getId() &&
@@ -676,6 +704,16 @@ public class ContactManagerImplTest {
 		}
 	}
 	
+	/**
+	 * Checks a Set<Contact> to see if it contains a specified Contact
+	 *
+	 * This same method is in the ContactManagerImpl class, but it is
+	 * private and should remain inaccessible.
+	 *
+	 * @param list the Set<Contact> to check
+	 * @param con the Contact to check for
+	 * @return whether con is in the list (true) or not (false)
+	 */
 	private boolean containsContact(Set<Contact> list, Contact con) {
 		boolean result = false;
 		if (list.isEmpty()) {
@@ -691,6 +729,16 @@ public class ContactManagerImplTest {
 		return result;
 	}
 	
+	/**
+	 * Compares whether two Set<Contact> are the same
+	 *
+	 * This same method is in the ContactManagerImpl class, but it is
+	 * private and should remain inaccessible.
+	 *
+	 * @param list1 the first Set<Contact> to compare
+	 * @param list2 the second Set<Contact> to compare
+	 * @return whether these two are the same (true) or not (false)
+	 */
 	private boolean equalsContactList(Set<Contact> list1, Set<Contact> list2) {
 		boolean result = true;
 		if (list1.isEmpty() || list2.isEmpty()) {
@@ -714,6 +762,13 @@ public class ContactManagerImplTest {
 		return result;
 	}
 	
+	/**
+	 * Checks whether a Set<Meeting> contains a list of Meetings with
+	 * unique IDs
+	 *
+	 * @param list the Set<Meeting> to check
+	 * @return whether the Meetings are unique (true) or not (false)
+	 */
 	private boolean uniqueIds(List<Meeting> list) {
 		boolean result = true;
 		for (int i = 0; i<list.size(); i++) {
@@ -726,6 +781,13 @@ public class ContactManagerImplTest {
 		return result;
 	}
 	
+	/**
+	 * Checks whether a Set<PastMeeting> contains a list of PastMeetings
+	 * with unique IDs
+	 *
+	 * @param list the Set<PastMeeting> to check
+	 * @return whether the PastMeetings are unique (true) or not (false)
+	 */
 	private boolean uniqueIdsPastMeeting(List<PastMeeting> list) {
 		boolean result = true;
 		for (int i = 0; i<list.size(); i++) {
