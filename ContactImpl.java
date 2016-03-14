@@ -1,3 +1,5 @@
+import java.io.Serializable;
+
 /**
  * Implementation of the Contact interface.
  * <p/>
@@ -17,7 +19,7 @@
  * </ul>
  */
 
-public class ContactImpl implements Contact {
+public class ContactImpl implements Contact, Serializable {
 	
 	private int ID;
 	private String name;
