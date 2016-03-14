@@ -94,9 +94,13 @@ public class ContactManagerImpl implements ContactManager {
 				fml.add(m);
 			}
 		}
+		////////////////////////////////////////
+		/**
 		if (checkDuplicateMeetings(fml)) {
 			fml = removeDuplicateMeetings(fml);
 		}
+		*/
+		
 		Collections.sort(fml, new CompareDates());
 		for (Meeting m : fml) {
 			if (!containsContact(m.getContacts(),contact)) {
@@ -123,7 +127,10 @@ public class ContactManagerImpl implements ContactManager {
 		if (mlo.isEmpty()) {
 			return mlo;
 		}
+		////////////////////////////////////////
+		/**
 		mlo = removeDuplicateMeetings(mlo);
+		*/
 		Collections.sort(mlo, new CompareDates());
 		return mlo;
 	}
@@ -144,7 +151,7 @@ public class ContactManagerImpl implements ContactManager {
 				pml.add((PastMeeting) m); 
 			}
 		}
-		
+		////////////////////////////////////////
 		/**
 		//remove duplicates
 		if (checkDuplicateMeetings(pml)) {

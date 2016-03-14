@@ -208,12 +208,11 @@ public class ContactManagerImplTest {
 	@Test
 	public void testsgetFutureMeetingListNoDuplicates() {
 		addTestContacts();
-		addTestMeetings();
-		cm.addFutureMeeting(contacts, futureDate2);
-		//5 meetings have been added, 3 are FutureMeetings, 
-		//2 of which are duplicates
+		for (int i = 0; i<100; i++) {
+			cm.addFutureMeeting(contacts, futureDate);
+		}
 		List<Meeting> fml = cm.getFutureMeetingList(con1);
-		assertTrue(fml.size() == 2);
+		assertTrue(uniqueIds(fml));
 	}
 	
 	@Test
@@ -292,11 +291,11 @@ public class ContactManagerImplTest {
 	@Test
 	public void testsgetMeetingListOnNoDuplicates() {
 		addTestContacts();
-		cm.addFutureMeeting(contacts, futureDate2);
-		cm.addFutureMeeting(contacts, futureDate2);
-		cm.addFutureMeeting(contacts, futureDate2);
-		List<Meeting> mlo = cm.getMeetingListOn(futureDate2);
-		assertEquals(1,mlo.size());
+		for (int i = 0; i<100; i++) {
+			cm.addFutureMeeting(contacts, futureDate);
+		}
+		List<Meeting> mlo = cm.getMeetingListOn(futureDate);
+		assertTrue(uniqueIds(mlo));
 	}
 	
 	/////////getPastMeetingListFor////////////
@@ -327,18 +326,15 @@ public class ContactManagerImplTest {
 		cm.getFutureMeetingList(con3);
 	}
 	
-	/**
 	@Test
 	public void testsgetPastMeetingListForNoDuplicates() {
 		addTestContacts();
-		addTestMeetings();
-		cm.addNewPastMeeting(contacts, futureDate2, text);
-		//5 meetings have been added, 3 are FutureMeetings, 
-		//2 of which are duplicates
-		List<Meeting> pml = cm.getPastMeetingListFor(con1);
-		assertTrue(pml.size() == 2);
+		for (int i = 0; i<100; i++) {
+			cm.addNewPastMeeting(contacts, futureDate, text);
+		}
+		List<PastMeeting> pml = cm.getPastMeetingListFor(con1);
+		assertTrue(uniqueIdsPastMeeting(pml));
 	}
-	*/
 	
 	@Test
 	public void testsgetPastMeetingListForNoMeeting() {
@@ -421,7 +417,7 @@ public class ContactManagerImplTest {
 		addTestMeetings();
 		//Meeting 2 & 4 are future meetings
 		text = "Testing addMeetingNotes()";
-		String expectedText = "Meeting notes + Testing addMeetingNotes()";
+		String expectedText = "Meeting notesTesting addMeetingNotes()";
 		PastMeeting pm = cm.addMeetingNotes(2,text);
 		assertEquals(expectedText, pm.getNotes());
 	}
@@ -678,6 +674,30 @@ public class ContactManagerImplTest {
 				}
 			}
 			
+		}
+		return result;
+	}
+	
+	private boolean uniqueIds(List<Meeting> list) {
+		boolean result = true;
+		for (int i = 0; i<list.size(); i++) {
+			for (int j = (i+1); j<list.size(); j++) {
+				if (list.get(i).getId() == list.get(j).getId()) {
+					result = false;
+				}
+			}
+		}
+		return result;
+	}
+	
+	private boolean uniqueIdsPastMeeting(List<PastMeeting> list) {
+		boolean result = true;
+		for (int i = 0; i<list.size(); i++) {
+			for (int j = (i+1); j<list.size(); j++) {
+				if (list.get(i).getId() == list.get(j).getId()) {
+					result = false;
+				}
+			}
 		}
 		return result;
 	}
