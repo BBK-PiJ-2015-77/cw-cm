@@ -7,14 +7,8 @@ import java.util.Collections;
 
 public class ContactManagerImpl implements ContactManager {
 	
-	//private int meetingCount = 1;
 	private Set<Contact> contactIdList;
 	private Set <Meeting> meetingIdList;
-	//pastMeetingIdList?
-	//futureMeetingIdList?
-	//private Calendar currentDate = Calendar.getInstance();
-	//FutureMeetingImpl fm;
-	//PastMeetingImpl pm;
 	
 	public ContactManagerImpl() {
 		contactIdList = new HashSet<Contact>();
@@ -179,11 +173,46 @@ public class ContactManagerImpl implements ContactManager {
 	}
 
     public PastMeeting addMeetingNotes(int id, String text) {
+    	if (!checkMeeting(id)) {
+    		throw new IllegalArgumentException("An invalid Meeting ID has been entered");
+    	}
+    	if (text.equals(null)) {
+    		throw new NullPointerException("Null meeting notes have been entered");
+    	}
+    	
+    	Calendar currentDate = Calendar.getInstance();
+    	int pmID = 0;
+    	Calendar pmDate = null;
+    	Set <Contact> pmContacts = null;
+    	String pmNotes = null;
+    	StringBuilder sb = new StringBuilder();
+    	PastMeeting newPastmeeting = null;
+    	Meeting meetingToRemove = null;
     	
     	for (Meeting m : meetingIdList) {
-    		
+    		if(m.getId() == id) {
+    			pmID = m.getId();
+    			pmDate = m.getDate();
+    			pmContacts = m.getContacts();
+    			meetingToRemove = m;
+    		}
     	}
-    	return null;
+    	
+    	if (meetingToRemove instanceof PastMeeting) {
+    		PastMeeting mtr = (PastMeeting) meetingToRemove;
+    		sb.append(mtr.getNotes());
+    	}
+    	sb.append(text);
+    	pmNotes = sb.toString();
+    	meetingIdList.remove(meetingToRemove);
+    	
+    	if(pmDate.after(currentDate)) {
+    		throw new IllegalStateException("The meeting date must be in the past");
+    	} else {
+    		newPastmeeting = new PastMeetingImpl(pmID,pmDate,pmContacts,pmNotes);
+    	}
+    	
+    	return newPastmeeting;
     }
 
     public int addNewContact(String name, String notes) {
@@ -258,6 +287,16 @@ public class ContactManagerImpl implements ContactManager {
     	boolean result = false;
     	for ( Contact con : contactIdList) {
     		if(i == con.getId()) {
+    			result = true;
+    		}
+    	}
+    	return result;
+    }
+    
+    private boolean checkMeeting(int i) {
+    	boolean result = false;
+    	for ( Meeting m : meetingIdList) {
+    		if(i == m.getId()) {
     			result = true;
     		}
     	}
