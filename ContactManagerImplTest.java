@@ -103,7 +103,7 @@ public class ContactManagerImplTest {
 	}
 	
 	
-	@Test(expected=IllegalArgumentException.class)
+	@Test(expected=IllegalStateException.class)
 	public void testsgetPastMeetingFutureID() {
 		addTestContacts();
 		cm.addFutureMeeting(contacts, futureDate);
@@ -402,26 +402,50 @@ public class ContactManagerImplTest {
 	
 	
 	/////////addMeetingNotes////////////
-	/**
+	
 	@Test
-	public void testsaddMeetingNotes() {
+	public void testsaddMeetingNotesFutureMeeting() {
 		addTestContacts();
-		text = "";
-		cm.addNewPastMeeting(contacts, pastDate, text);
-		String testNotes = "Testing addMeetingNotes";
-		cm.addMeetingNotes(1, testNotes);
-		Meeting pastMeeting = cm.getPastMeeting(1);
-		assertEquals(testNotes, pastMeeting.getNotes());
+		addTestMeetings();
+		//Meeting 1 & 3 are future meetings
+		text = "Testing addMeetingNotes()";
+		PastMeeting pm = cm.addMeetingNotes(3,text);
+		assertEquals(text, pm.getNotes());
+	}
+	
+	@Test
+	public void testsaddMeetingNotesPastMeeting() {
+		addTestContacts();
+		addTestMeetings();
+		//Meeting 2 & 4 are future meetings
+		text = "Testing addMeetingNotes()";
+		String expectedText = "Meeting notes + Testing addMeetingNotes()"
+		PastMeeting pm = cm.addMeetingNotes(2,text);
+		assertEquals(expectedText, pm.getNotes());
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testsaddMeetingNotesNoMeeting() {
 		//IllegalArgumentException if meeting doesn't exist
 		addTestContacts();
-		cm.addMeetingNotes(1, "Testing addMeetingNotes");
+		cm.addMeetingNotes(1,text);
 	}
 	
-	*/
+	@Test(expected=IllegalArgumentException.class)
+	public void testsaddMeetingNotesNoMeeting() {
+		//IllegalArgumentException if meeting doesn't exist
+		addTestContacts();
+		addTestMeetings();
+		cm.addMeetingNotes(100,text);
+	}
+	
+	@Test(expected=IllegalStateException.class)
+	public void testsaddMeetingNotesNoMeeting() {
+		//IllegalArgumentException if meeting doesn't exist
+		addTestContacts();
+		addTestMeetings();
+		cm.addMeetingNotes(100,text);
+	}
 	
 	
 	
